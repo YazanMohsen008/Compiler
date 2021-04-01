@@ -1,0 +1,12 @@
+<html>
+<head>
+
+</head>
+<body>
+<div>
+    <p cp-if="result() < 30" >
+        {{result() < 20 ? (x > 15 ? "1-1" : "1-2") : (x < 15 ? "2-1" : "2-2") }}
+     </p>
+</div>
+</body>
+</html>
