@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ea43e868-68f0-49bb-9f3c-47e3b5c21a1d" name="Default Changelist" comment="" />
+    <list default="true" id="ea43e868-68f0-49bb-9f3c-47e3b5c21a1d" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/HTMLLexer.interp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/HTMLLexer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gen/HTMLLexer.tokens" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/samples/Samples.html" beforeDir="false" afterPath="$PROJECT_DIR$/samples/Samples.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/samples/samples.txt" beforeDir="false" afterPath="$PROJECT_DIR$/samples/samples.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/HTMLParser.g4" beforeDir="false" afterPath="$PROJECT_DIR$/src/HTMLParser.g4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/visitor/ASTBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/visitor/ASTBuilder.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/generated/HTMLLexer.interp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/generated/HTMLLexer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/generated/HTMLLexer.tokens" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParser.interp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParser.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParser.tokens" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParserBaseListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParserBaseVisitor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParserListener.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParserVisitor.java" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1qTrIzwfcaxxkHFA8qOfgwzixpx" />
   <component name="ProjectViewState">
@@ -14,7 +38,43 @@
   </component>
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
     <property name="settings.editor.selected.configurable" value="preferences.fileTypes" />
   </component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="compiler_gitlab" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ea43e868-68f0-49bb-9f3c-47e3b5c21a1d" name="Default Changelist" comment="" />
+      <created>1617348114897</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1617348114897</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
 </project>

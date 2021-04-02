@@ -121,7 +121,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     @Override
     public Object visitCp_modelAttribute(HTMLParser.Cp_modelAttributeContext ctx) {
         return new Attribute(ctx.CP_MODEL().getText(),
-                (AttributeValue)visit(ctx.objectChainedMembers()));
+                (AttributeValue)visit(ctx.numericValue()));
     }
 
     @Override

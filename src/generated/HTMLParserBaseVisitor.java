@@ -1,5 +1,4 @@
-// Generated from /data/yazan/MEGASync/College/Fourth_Year/compiler/compiler_gitlab/compilerast/compilerast/src/HTMLParser.g4 by ANTLR 4.8
-package generated;
+package generated;// Generated from D:/College/Compiler/compiler/src\HTMLParser.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**

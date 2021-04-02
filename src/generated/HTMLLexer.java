@@ -1,4 +1,4 @@
-// Generated from /data/yazan/MEGASync/College/Fourth_Year/compiler/compiler_gitlab/compilerast/compilerast/src/HTMLLexer.g4 by ANTLR 4.8
+// Generated from D:/College/Compiler/compiler/src\HTMLLexer.g4 by ANTLR 4.9.1
 package generated;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
