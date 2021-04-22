@@ -1,5 +1,6 @@
 package ast.nodes.elements;
 
+import SymbolTable.SymbolTable;
 import ast.nodes.PrintUtil;
 import ast.nodes.attributes.Attribute;
 import ast.nodes.contents.Content;
@@ -10,6 +11,10 @@ public class HTMLElement implements Element {
     private String closingTagName;
     private List<Attribute> attributes;
     private List<Content> contents;
+    private SymbolTable symbolTable;
+
+    public HTMLElement() {
+    }
 
     public HTMLElement(String openingTagName, String closingTagName, List<Attribute> attributes,
                        List<Content> contents) {
@@ -17,6 +22,46 @@ public class HTMLElement implements Element {
         this.closingTagName = closingTagName;
         this.attributes = attributes;
         this.contents = contents;
+    }
+
+    public String getOpeningTagName() {
+        return openingTagName;
+    }
+
+    public void setOpeningTagName(String openingTagName) {
+        this.openingTagName = openingTagName;
+    }
+
+    public String getClosingTagName() {
+        return closingTagName;
+    }
+
+    public void setClosingTagName(String closingTagName) {
+        this.closingTagName = closingTagName;
+    }
+
+    public List<Attribute> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(List<Attribute> attributes) {
+        this.attributes = attributes;
+    }
+
+    public List<Content> getContents() {
+        return contents;
+    }
+
+    public void setContents(List<Content> contents) {
+        this.contents = contents;
+    }
+
+    public SymbolTable getSymbolTable() {
+        return symbolTable;
+    }
+
+    public void setSymbolTable(SymbolTable symbolTable) {
+        this.symbolTable = symbolTable;
     }
 
     @Override

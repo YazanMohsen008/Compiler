@@ -7,12 +7,12 @@
             charset="UTF-8"></script>
     <nav class="globalNav" data-module="nav">
         <header>
-            <div id="navAuth" cp-if="isAuthenitcated">
+            <div id="navAuth" cp-if="isAuthenticated">
                 <ul class="navProvider">
                     <li id="mvpdLogo"></li>
                 </ul>
             </div>
-            <div id="navNotAuth" cp-if="! isAuthenitcated">
+            <div id="navNotAuth" cp-if="!isAuthenticated">
                 <p>Not auth</p>
             </div>
         </header>
@@ -129,8 +129,8 @@
 </head>
 <body>
 <div>
-    <p cp-if="formatted"> {{date | myFormater:"YYYY-MM-DD"}} </p>
-    <p cp-if="!formatted"> {{date | myFormater:"YYYYMMDD"}} </p>
+    <p cp-if="formatted"> {{date | myFormatter:"YYYY-MM-DD"}} </p>
+    <p cp-if="!formatted"> {{date | myFormatter:"YYYYMMDD"}} </p>
 </div>
 </body>
 </html>

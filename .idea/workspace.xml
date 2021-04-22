@@ -2,34 +2,48 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ea43e868-68f0-49bb-9f3c-47e3b5c21a1d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/HTMLLexer.interp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/HTMLLexer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gen/HTMLLexer.tokens" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Samples AST.html" beforeDir="false" afterPath="$PROJECT_DIR$/Samples AST.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/HtmlDocument.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/HtmlDocument.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/elements/HTMLElement.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/elements/HTMLElement.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/expressions/Identifier.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/expressions/Identifier.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/visitor/ASTBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/visitor/ASTBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/generated/HTMLParserBaseVisitor.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/generated/HTMLParserBaseVisitor.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/samples/Samples.html" beforeDir="false" afterPath="$PROJECT_DIR$/samples/Samples.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/samples/samples.txt" beforeDir="false" afterPath="$PROJECT_DIR$/samples/samples.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HTMLParser.g4" beforeDir="false" afterPath="$PROJECT_DIR$/src/HTMLParser.g4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/nodes/HtmlDocument.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/HtmlDocument.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/nodes/elements/HTMLElement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/elements/HTMLElement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/nodes/expressions/CustomObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/expressions/CustomObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/nodes/expressions/Identifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/expressions/Identifier.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ast/visitor/ASTBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/visitor/ASTBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generated/HTMLLexer.interp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generated/HTMLLexer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generated/HTMLLexer.tokens" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParser.interp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParser.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParser.tokens" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParserBaseListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParserBaseVisitor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParserListener.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParserVisitor.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParserBaseVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/generated/HTMLParserBaseVisitor.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="ProjectId" id="1qTrIzwfcaxxkHFA8qOfgwzixpx" />
   <component name="ProjectViewState">
@@ -76,5 +90,6 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>

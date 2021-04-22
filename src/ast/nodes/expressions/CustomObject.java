@@ -1,5 +1,6 @@
 package ast.nodes.expressions;
 
+import SymbolTable.Symbol;
 import ast.nodes.arithmetic_expressions.ArithmeticExpression;
 import ast.nodes.attributes.AttributeValue;
 import ast.nodes.boolean_expressions.BooleanExpression;
@@ -9,9 +10,15 @@ import java.util.List;
 public class CustomObject implements BooleanExpression, ArithmeticExpression,
         AttributeValue {
     private List<ObjectMember> members;
+    Symbol symbol;
 
     public CustomObject(List<ObjectMember> members) {
         this.members = members;
+    }
+    public CustomObject(List<ObjectMember> members,Symbol symbol) {
+        this(members);
+        this.symbol = symbol;
+
     }
 
     @Override

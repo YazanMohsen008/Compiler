@@ -1,4 +1,5 @@
 package generated;// Generated from D:/College/Compiler/compiler/src\HTMLParser.g4 by ANTLR 4.9.1
+import SymbolTable.SymbolTable;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
@@ -23,7 +24,7 @@ public class HTMLParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> implem
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitHtmlElement(HTMLParser.HtmlElementContext ctx) { return visitChildren(ctx); }
+	@Override public T visitHtmlElement(HTMLParser.HtmlElementContext ctx  ) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
