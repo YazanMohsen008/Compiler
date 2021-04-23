@@ -8,9 +8,13 @@ public class Identifier implements BooleanExpression, ArithmeticExpression,
         ObjectMember {
     private String name;
     private Symbol symbol;
-
+    private ObjectMember parent;
     public Identifier(String name) {
         this.name = name;
+    }
+
+    public void setSymbol(Symbol symbol) {
+        this.symbol = symbol;
     }
 
     public Identifier(Symbol symbol) {
@@ -34,4 +38,13 @@ public class Identifier implements BooleanExpression, ArithmeticExpression,
 
     }
 
+    @Override
+    public void setParent(ObjectMember parent) {
+       this.parent=parent;
+    }
+
+    @Override
+    public ObjectMember getParent() {
+        return parent;
+    }
 }

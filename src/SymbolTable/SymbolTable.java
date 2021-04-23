@@ -1,5 +1,10 @@
 package SymbolTable;
 
+import ast.nodes.expressions.AccessedArrayElement;
+import ast.nodes.expressions.FunctionCall;
+import ast.nodes.expressions.Identifier;
+import ast.nodes.expressions.ObjectMember;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,15 +14,15 @@ public class SymbolTable {
     List<SymbolTable> children;
     SymbolTable parent;
 
+    public SymbolTable() {
+        symbols = new ArrayList<>();
+        children = new ArrayList<>();
+    }
     public SymbolTable(String name) {
         this();
         this.name = name;
     }
 
-    public SymbolTable() {
-        symbols = new ArrayList<>();
-        children = new ArrayList<>();
-    }
 
     public SymbolTable getParent() {
         return parent;
@@ -32,24 +37,16 @@ public class SymbolTable {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
     public List<Symbol> getSymbols() {
         return symbols;
     }
 
-    public void setSymbols(List<Symbol> symbols) {
-        this.symbols = symbols;
-    }
 
 
-    public Symbol insert(List<String> symbolsName) {
-        Symbol symbol = getSymbol(symbolsName);
+    public Symbol insert(ObjectMember objectMember) {
+        Symbol symbol = getSymbol(objectMember);
         if (symbol == null) {
-            symbol = new Symbol(symbolsName);
+            symbol = new Symbol(objectMember);
             symbols.add(symbol);
         }
         return symbol;
@@ -57,12 +54,12 @@ public class SymbolTable {
 
 
     public void print() {
-        System.out.print("Symbol Table : "+name);
+        System.out.print("Symbol Table : " + name);
         if (parent != null)
             System.out.println(" SON OF " + parent.name);
         System.out.println();
         for (Symbol symbol : symbols)
-            System.out.println("           "+symbol);
+            System.out.println("           " + symbol);
     }
 
     public void addChild(SymbolTable child) {
@@ -86,17 +83,57 @@ public class SymbolTable {
     }
 
 
-    public Symbol getSymbol(List<String> symbolsName) {
+    public Symbol getSymbol(ObjectMember objectMember) {
+
         for (Symbol symbol : symbols) {
-            if (symbolsName.size() != symbol.getNames().size())
-                continue;
-            for (int i = 0; i < symbolsName.size(); i++) {
-                if (!symbolsName.get(i).equals(symbol.getNames().get(i)))
-                    return null;
-            }
-            return symbol;
+            if (checkSymbol(objectMember, symbol))
+                return symbol;
         }
         return null;
     }
 
+    public boolean checkSymbol(ObjectMember objectMember, Symbol symbol) {
+
+        if (!objectMember.getName().equals(symbol.name)) {
+            System.out.println("Wrong Names");
+            return false;
+        }
+
+        //Check to Store Function And Variable with same name
+        if (!checkTypes(objectMember, symbol)) {
+            System.out.println("Wrong Types");
+            return false;
+        }
+
+        if (symbol.getSymbolType()==Symbol.FUNCTION) {
+            //Check For override methods
+            if(!(((FunctionCall)objectMember).getArgumentsCount()==symbol.getArgumentsCount())) {
+                System.out.println("Wrong Arguments");
+                return false;
+            }
+        }
+
+        if (objectMember.getParent() == null && symbol.getParent() == null)
+            return true;
+
+        if (objectMember.getParent() != null && symbol.getParent() != null)
+            if (checkSymbol(objectMember.getParent(), symbol.getParent()))
+                return true;
+        System.out.println("Wrong Parents");
+        return false;
+    }
+
+    boolean checkTypes(ObjectMember objectMember, Symbol symbol) {
+
+        if (objectMember instanceof Identifier && symbol.getSymbolType() == Symbol.VARIABLE)
+            return true;
+        if (objectMember instanceof FunctionCall && symbol.getSymbolType() == Symbol.FUNCTION)
+            return true;
+        if (objectMember instanceof AccessedArrayElement && symbol.getSymbolType() == Symbol.AccessedArrayElement)
+            return true;
+
+        return false;
+    }
+
 }
+

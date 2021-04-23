@@ -1,5 +1,6 @@
 package ast.nodes.expressions;
 
+import SymbolTable.Symbol;
 import ast.nodes.arithmetic_expressions.ArithmeticExpression;
 import ast.nodes.boolean_expressions.BooleanExpression;
 
@@ -7,6 +8,8 @@ public class AccessedArrayElement implements BooleanExpression, ArithmeticExpres
         ObjectMember {
     private Identifier identifier;
     private ArithmeticExpression index;
+    private ObjectMember parent;
+    private Symbol symbol;
 
     public AccessedArrayElement(Identifier identifier, ArithmeticExpression index) {
         this.identifier = identifier;
@@ -20,4 +23,28 @@ public class AccessedArrayElement implements BooleanExpression, ArithmeticExpres
         textRepresentation += "[" + this.index + "]";
         return textRepresentation;
     }
-}
+
+    @Override
+    public void setParent(ObjectMember parent) {
+        this.parent=parent;
+    }
+
+    @Override
+    public ObjectMember getParent() {
+        return parent;
+    }
+
+    @Override
+    public String getName() {
+        return identifier.getName();
+    }
+
+    @Override
+    public Symbol getSymbol() {
+        return symbol;
+    }
+
+    @Override
+    public void setSymbol(Symbol symbol) {
+        this.symbol=symbol;
+    }}

@@ -2,13 +2,14 @@ package ast.nodes.contents;
 
 import ast.nodes.PrintUtil;
 import ast.nodes.expressions.CustomObject;
+import ast.nodes.expressions.ObjectMember;
 import ast.nodes.expressions.StringLiteral;
 
 public class Variable {
-    private CustomObject field;
+    private ObjectMember field;
     private StringLiteral value;
 
-    public Variable(CustomObject field, StringLiteral value) {
+    public Variable(ObjectMember field, StringLiteral value) {
         this.field = field;
         this.value = value;
     }

@@ -320,39 +320,41 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
      */
     @Override
     public Object visitObjectChainedMembers(HTMLParser.ObjectChainedMembersContext ctx) {
-        List<ObjectMember> members = new ArrayList<>();
-        List<String> identifiersName = new ArrayList<>();
         fromObjectChained = true;
+        ObjectMember parentObjectMember = null;
         for (int i = 0; i < ctx.objectMember().size(); i++) {
-            members.add((ObjectMember) visit(ctx.objectMember(i)));
-            identifiersName.add(ctx.objectMember(i).getText());
+            ObjectMember objectMember = (ObjectMember) visit(ctx.objectMember(i));
+
+            objectMember.setParent(parentObjectMember);
+            objectMember.setSymbol(getObjectMemberSymbol(objectMember));
+            parentObjectMember = objectMember;
         }
-        return new CustomObject(members, getIdentifierSymbol(identifiersName));
+        return parentObjectMember;
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private Symbol getIdentifierSymbol(List<String> IdentifiersName) {
 
+    private Symbol getObjectMemberSymbol(ObjectMember objectMember) {
         Symbol symbol = null;
         SymbolTable temp = CurrentTable;
 //        cp-model put the Symbol in parent Scope
         if (parentScope) {
             temp = temp.getParent();
-            symbol = temp.insert(IdentifiersName);
+            symbol = temp.insert(objectMember);
         } else {
 //        Getting Reference for old Symbol not new Scope
             if (!newScope) {
                 while (temp != null) {
-                    symbol = temp.getSymbol(IdentifiersName);
+                    symbol = temp.getSymbol(objectMember);
                     if (symbol != null)
                         break;
                     temp = temp.getParent();
                 }
                 if (temp == null)
-                    symbol = GlobalSymbolTableReference.insert(IdentifiersName);
+                    symbol = GlobalSymbolTableReference.insert(objectMember);
 
             } else
-                symbol=temp.insert(IdentifiersName);
+                symbol = temp.insert(objectMember);
         }
         return symbol;
     }
@@ -363,13 +365,13 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
 
     @Override
     public Object visitIdentifier(HTMLParser.IdentifierContext ctx) {
-        List<String> IdentifierName = new ArrayList<>();
-        IdentifierName.add(ctx.IDENTIFIER().getText());
-
         if (fromObjectChained)
             return new Identifier(ctx.IDENTIFIER().getText());
-        else
-            return new Identifier(getIdentifierSymbol(IdentifierName));
+        else {
+            Identifier identifier = new Identifier(ctx.getText());
+            identifier.setSymbol(getObjectMemberSymbol(identifier));
+            return identifier;
+        }
     }
 
 
@@ -400,12 +402,11 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
      */
     @Override
     public Object visitFunctionCall(HTMLParser.FunctionCallContext ctx) {
-        //TODO add  to Symbol Table
-        Identifier identifier = new Identifier(ctx.IDENTIFIER().getText());
-        List<Expression> arguments = null;
+        List<Expression> arguments = new ArrayList<>();
         if (ctx.functionArguments() != null)
             arguments = (List<Expression>) visit(ctx.functionArguments());
 
+        Identifier identifier = new Identifier(ctx.IDENTIFIER().getText());
 
         return new FunctionCall(identifier, arguments);
     }
@@ -449,9 +450,8 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     public Object visitForLoop1(HTMLParser.ForLoop1Context ctx) {
 
         newScope = true;
-        List<String> name = new ArrayList<>();
-        name.add(ctx.IDENTIFIER(0).getText());
-        Identifier value = new Identifier(getIdentifierSymbol(name));
+        Identifier value = new Identifier(ctx.IDENTIFIER(0).getText());
+        value.setSymbol(getObjectMemberSymbol(value));
 
         Expression object = null;
         Identifier index = null;
@@ -465,9 +465,8 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         }
         newScope = true;
         if (ctx.ASSIGNMENT() != null) {
-            name = new ArrayList<>();
-            name.add(ctx.IDENTIFIER(1).getText());
-            index = new Identifier(getIdentifierSymbol(name));
+            index = new Identifier(ctx.IDENTIFIER(1).getText());
+            value.setSymbol(getObjectMemberSymbol(index));
         }
         return new ForLoop(value, object, index);
     }
@@ -475,13 +474,12 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     @Override
     public Object visitForLoop2(HTMLParser.ForLoop2Context ctx) {
         newScope = true;
-        List<String> name = new ArrayList<>();
-        name.add(ctx.IDENTIFIER(0).getText());
-        Identifier key = new Identifier(getIdentifierSymbol(name));
+        Identifier key = new Identifier(ctx.IDENTIFIER(0).getText());
+        key.setSymbol(getObjectMemberSymbol(key));
 
-        name = new ArrayList<>();
-        name.add(ctx.IDENTIFIER(1).getText());
-        Identifier value = new Identifier(getIdentifierSymbol(name));
+
+        Identifier value = new Identifier(ctx.IDENTIFIER(1).getText());
+        value.setSymbol(getObjectMemberSymbol(value));
 
         newScope = false;
         Expression object = (Expression) visit(ctx.objectChainedMembers());
@@ -687,7 +685,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
      */
     @Override
     public Object visitVariable(HTMLParser.VariableContext ctx) {
-        CustomObject field = (CustomObject) visit(ctx.objectChainedMembers());
+        ObjectMember field = (ObjectMember) visit(ctx.objectChainedMembers());
         StringLiteral value = null;
         if (ctx.STRING_LITERAL() != null)
             value = new StringLiteral(ctx.STRING_LITERAL().getText());

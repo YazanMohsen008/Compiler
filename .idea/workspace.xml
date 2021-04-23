@@ -2,25 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ea43e868-68f0-49bb-9f3c-47e3b5c21a1d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Samples AST.html" beforeDir="false" afterPath="$PROJECT_DIR$/Samples AST.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/HtmlDocument.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/HtmlDocument.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/elements/HTMLElement.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/elements/HTMLElement.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/expressions/Identifier.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/expressions/Identifier.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/SymbolTable/Symbol.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/SymbolTable/Symbol.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/SymbolTable/SymbolTable.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/SymbolTable/SymbolTable.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/expressions/FunctionCall.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/expressions/FunctionCall.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/visitor/ASTBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/visitor/ASTBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/generated/HTMLParserBaseVisitor.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/generated/HTMLParserBaseVisitor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/samples/Samples.html" beforeDir="false" afterPath="$PROJECT_DIR$/samples/Samples.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/samples/samples.txt" beforeDir="false" afterPath="$PROJECT_DIR$/samples/samples.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ast/nodes/HtmlDocument.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/HtmlDocument.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ast/nodes/elements/HTMLElement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/elements/HTMLElement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SymbolTable/Symbol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SymbolTable/Symbol.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SymbolTable/SymbolTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SymbolTable/SymbolTable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/nodes/contents/Variable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/contents/Variable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/nodes/expressions/AccessedArrayElement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/expressions/AccessedArrayElement.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ast/nodes/expressions/CustomObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/expressions/CustomObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/nodes/expressions/FunctionCall.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/expressions/FunctionCall.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ast/nodes/expressions/Identifier.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/expressions/Identifier.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/nodes/expressions/ObjectMember.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/expressions/ObjectMember.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ast/visitor/ASTBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/visitor/ASTBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParserBaseVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/generated/HTMLParserBaseVisitor.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

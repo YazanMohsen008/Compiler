@@ -9,13 +9,30 @@ import java.util.List;
 
 public class CustomObject implements BooleanExpression, ArithmeticExpression,
         AttributeValue {
-    private List<ObjectMember> members;
+    private List<CustomObject> members;
     Symbol symbol;
+    CustomObject parentObject;
+    ObjectMember objectMember; //identifier or function
 
-    public CustomObject(List<ObjectMember> members) {
+
+    public CustomObject(ObjectMember objectMember, CustomObject parentObject) {
+        this.objectMember = objectMember;
+        this.parentObject= parentObject ;
+
+    }
+
+    public CustomObject getParentObject() {
+        return parentObject;
+    }
+
+    public void setParentObject(CustomObject parentObject) {
+        this.parentObject = parentObject;
+    }
+
+    public CustomObject(List<CustomObject> members) {
         this.members = members;
     }
-    public CustomObject(List<ObjectMember> members,Symbol symbol) {
+    public CustomObject(List<CustomObject> members,Symbol symbol) {
         this(members);
         this.symbol = symbol;
 

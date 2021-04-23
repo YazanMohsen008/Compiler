@@ -1,3 +1,13 @@
-<div cp-if="x[1]">
-    <div cp-if="x[2]"></div>
-</div>
+
+
+<!--6-->
+<!-- cp show-->
+<html>
+<head>
+
+</head>
+<body>
+<p cp-show="showParagraph()"> displayed </p>
+<p cp-hide="!showParagraph()"> hidden </p>
+</body>
+</html>
