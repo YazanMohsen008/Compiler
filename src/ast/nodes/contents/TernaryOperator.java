@@ -4,7 +4,7 @@ import ast.nodes.PrintUtil;
 import ast.nodes.boolean_expressions.BooleanExpression;
 import ast.nodes.expressions.Expression;
 
-public class TernaryOperator implements  Content, Expression {
+public class TernaryOperator implements  Expression {
     private BooleanExpression leftOperand;
     private Expression middleOperand;
     private Expression rightOperand;

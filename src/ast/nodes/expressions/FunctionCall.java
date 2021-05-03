@@ -59,4 +59,5 @@ public class FunctionCall implements BooleanExpression, ArithmeticExpression,
     public void setSymbol(Symbol symbol) {
         this.symbol=symbol;
     }
-}
+
+    }

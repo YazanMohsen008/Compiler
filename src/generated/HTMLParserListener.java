@@ -1,4 +1,5 @@
-package generated;// Generated from D:/College/Compiler/compiler/src\HTMLParser.g4 by ANTLR 4.9.1
+// Generated from D:/College/Compiler/compiler/src\HTMLParser.g4 by ANTLR 4.9.1
+package generated;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -76,6 +77,54 @@ public interface HTMLParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitStyleElement(HTMLParser.StyleElementContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code cp_includeAttribute}
+	 * labeled alternative in {@link HTMLParser#attribute}.
+	 * @param ctx the parse tree
+	 */
+	void enterCp_includeAttribute(HTMLParser.Cp_includeAttributeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code cp_includeAttribute}
+	 * labeled alternative in {@link HTMLParser#attribute}.
+	 * @param ctx the parse tree
+	 */
+	void exitCp_includeAttribute(HTMLParser.Cp_includeAttributeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code cp_parametersAttribute}
+	 * labeled alternative in {@link HTMLParser#attribute}.
+	 * @param ctx the parse tree
+	 */
+	void enterCp_parametersAttribute(HTMLParser.Cp_parametersAttributeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code cp_parametersAttribute}
+	 * labeled alternative in {@link HTMLParser#attribute}.
+	 * @param ctx the parse tree
+	 */
+	void exitCp_parametersAttribute(HTMLParser.Cp_parametersAttributeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code changeAttribute}
+	 * labeled alternative in {@link HTMLParser#attribute}.
+	 * @param ctx the parse tree
+	 */
+	void enterChangeAttribute(HTMLParser.ChangeAttributeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code changeAttribute}
+	 * labeled alternative in {@link HTMLParser#attribute}.
+	 * @param ctx the parse tree
+	 */
+	void exitChangeAttribute(HTMLParser.ChangeAttributeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code focusAttribute}
+	 * labeled alternative in {@link HTMLParser#attribute}.
+	 * @param ctx the parse tree
+	 */
+	void enterFocusAttribute(HTMLParser.FocusAttributeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code focusAttribute}
+	 * labeled alternative in {@link HTMLParser#attribute}.
+	 * @param ctx the parse tree
+	 */
+	void exitFocusAttribute(HTMLParser.FocusAttributeContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code cp_appAttribute}
 	 * labeled alternative in {@link HTMLParser#attribute}.
@@ -647,18 +696,6 @@ public interface HTMLParserListener extends ParseTreeListener {
 	 */
 	void exitText(HTMLParser.TextContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code curlyTernaryOperator}
-	 * labeled alternative in {@link HTMLParser#curly}.
-	 * @param ctx the parse tree
-	 */
-	void enterCurlyTernaryOperator(HTMLParser.CurlyTernaryOperatorContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code curlyTernaryOperator}
-	 * labeled alternative in {@link HTMLParser#curly}.
-	 * @param ctx the parse tree
-	 */
-	void exitCurlyTernaryOperator(HTMLParser.CurlyTernaryOperatorContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code curlyVariables}
 	 * labeled alternative in {@link HTMLParser#curly}.
 	 * @param ctx the parse tree
@@ -670,6 +707,18 @@ public interface HTMLParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitCurlyVariables(HTMLParser.CurlyVariablesContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code curlyExpression}
+	 * labeled alternative in {@link HTMLParser#curly}.
+	 * @param ctx the parse tree
+	 */
+	void enterCurlyExpression(HTMLParser.CurlyExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code curlyExpression}
+	 * labeled alternative in {@link HTMLParser#curly}.
+	 * @param ctx the parse tree
+	 */
+	void exitCurlyExpression(HTMLParser.CurlyExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code basicTernaryOperator}
 	 * labeled alternative in {@link HTMLParser#ternaryOperator}.
@@ -694,18 +743,6 @@ public interface HTMLParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitParenthesizedTernaryOperator(HTMLParser.ParenthesizedTernaryOperatorContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code printingExprToExecute}
-	 * labeled alternative in {@link HTMLParser#exprToExecute}.
-	 * @param ctx the parse tree
-	 */
-	void enterPrintingExprToExecute(HTMLParser.PrintingExprToExecuteContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code printingExprToExecute}
-	 * labeled alternative in {@link HTMLParser#exprToExecute}.
-	 * @param ctx the parse tree
-	 */
-	void exitPrintingExprToExecute(HTMLParser.PrintingExprToExecuteContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code ternaryExprToExecute}
 	 * labeled alternative in {@link HTMLParser#exprToExecute}.

@@ -14,16 +14,21 @@ element
     ;
 
 attribute
-    : CP_APP      ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   IDENTIFIER             DQ   #cp_appAttribute
-    | CP_SHOW     ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   booleanExpression      DQ   #cp_showAttribute
-    | CP_HIDE     ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   booleanExpression      DQ   #cp_hideAttribute
-    | CP_IF       ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   booleanExpression      DQ   #cp_ifAttribute
-    | CP_FOR      ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   forLoop                DQ   #cp_forAttribute
-    | CP_MODEL    ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   numericValue           DQ   #cp_modelAttribute
-    | CLICK       ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   functionCall           DQ   #clickAttribute
-    | MOUSEOVER   ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   functionCall           DQ   #mouseoverAttribute
-    | MOUSEOVER   ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   functionCall           DQ   #mouseoverAttribute
-    | TAG_NAME    (TAG_EQUALS        ATTVALUE_VALUE)?                                #non_cpAttribute
+    :
+      CP_INCLUDE    ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   objectChainedMembers   DQ   #cp_includeAttribute
+    | CP_PARAMETERS ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   objectChainedMembers   DQ   #cp_parametersAttribute
+    | CHANGE        ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   objectChainedMembers   DQ   #changeAttribute
+    | FOCUS         ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   objectChainedMembers   DQ   #focusAttribute
+
+    | CP_APP        ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   IDENTIFIER             DQ   #cp_appAttribute
+    | CP_SHOW       ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   booleanExpression      DQ   #cp_showAttribute
+    | CP_HIDE       ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   booleanExpression      DQ   #cp_hideAttribute
+    | CP_IF         ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   booleanExpression      DQ   #cp_ifAttribute
+    | CP_FOR        ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   forLoop                DQ   #cp_forAttribute
+    | CP_MODEL      ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   numericValue           DQ   #cp_modelAttribute
+    | CLICK         ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   objectChainedMembers   DQ   #clickAttribute
+    | MOUSEOVER     ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   objectChainedMembers   DQ   #mouseoverAttribute
+    | TAG_NAME     (TAG_EQUALS        ATTVALUE_VALUE)?                                 #non_cpAttribute
     ;
 
 booleanExpression
@@ -63,14 +68,14 @@ comparisonExpression
 comparisonOperator
     : GREATER
     | SMALLER
-    | GRETARE_EQUALS
+    | GREATER_EQUALS
     | SMALLER_EQUALS
     ;
 
 arithmeticExpression
     : numericValue                                                    #primitiveArithmeticExpression
-    | arithmeticExpression arithmeticOperator arithmeticExpression   #binaryArithmeticExpression
-    | (PLUS | MINUS) arithmeticExpression                  #unaryArithmeticExpression
+    | arithmeticExpression arithmeticOperator arithmeticExpression    #binaryArithmeticExpression
+    | (PLUS | MINUS) arithmeticExpression                             #unaryArithmeticExpression
     | OPENING_PARENTHESES arithmeticExpression CLOSING_PARENTHESES    #parenthesizedArithmeticExpression
     ;
 
@@ -159,8 +164,8 @@ content
 text : (HTML_TEXT | CURLY_OPEN)+ ;
 
 curly
-    : DOUBLE_CURLY_OPEN ternaryOperator DOUBLE_CURLY_CLOSE   #curlyTernaryOperator
-    | DOUBLE_CURLY_OPEN variables DOUBLE_CURLY_CLOSE         #curlyVariables
+    : DOUBLE_CURLY_OPEN variables DOUBLE_CURLY_CLOSE         #curlyVariables
+    | DOUBLE_CURLY_OPEN exprToExecute DOUBLE_CURLY_CLOSE     #curlyExpression
     ;
 
 ternaryOperator
@@ -169,8 +174,7 @@ ternaryOperator
     ;
 
 exprToExecute
-    : STRING_LITERAL                                          #printingExprToExecute
-    | ternaryOperator                                         #ternaryExprToExecute
+    : ternaryOperator                                         #ternaryExprToExecute
     | OPENING_PARENTHESES exprToExecute CLOSING_PARENTHESES   #parenthesizedExprToExecute
     | expression                                              #exp
     ;

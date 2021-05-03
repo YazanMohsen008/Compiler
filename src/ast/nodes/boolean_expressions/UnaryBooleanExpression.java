@@ -1,6 +1,9 @@
 package ast.nodes.boolean_expressions;
 
-public class UnaryBooleanExpression implements BooleanExpression {
+import ast.nodes.PrintUtil;
+import ast.nodes.contents.Content;
+
+public class UnaryBooleanExpression implements BooleanExpression,Content {
     private String operator;
     private BooleanExpression operand;
 
@@ -15,5 +18,12 @@ public class UnaryBooleanExpression implements BooleanExpression {
         textRepresentation += this.operator;
         textRepresentation += "(" + this.operand + ")";
         return textRepresentation;
+    }
+
+
+    @Override
+    public String toString(int col) {
+        String indent = PrintUtil.getIndent(col);
+        return indent +toString();
     }
 }

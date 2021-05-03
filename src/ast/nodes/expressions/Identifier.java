@@ -47,4 +47,6 @@ public class Identifier implements BooleanExpression, ArithmeticExpression,
     public ObjectMember getParent() {
         return parent;
     }
+
+
 }

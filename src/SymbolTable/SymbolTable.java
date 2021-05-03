@@ -95,20 +95,17 @@ public class SymbolTable {
     public boolean checkSymbol(ObjectMember objectMember, Symbol symbol) {
 
         if (!objectMember.getName().equals(symbol.name)) {
-            System.out.println("Wrong Names");
             return false;
         }
 
         //Check to Store Function And Variable with same name
         if (!checkTypes(objectMember, symbol)) {
-            System.out.println("Wrong Types");
             return false;
         }
 
         if (symbol.getSymbolType()==Symbol.FUNCTION) {
             //Check For override methods
             if(!(((FunctionCall)objectMember).getArgumentsCount()==symbol.getArgumentsCount())) {
-                System.out.println("Wrong Arguments");
                 return false;
             }
         }
@@ -119,7 +116,6 @@ public class SymbolTable {
         if (objectMember.getParent() != null && symbol.getParent() != null)
             if (checkSymbol(objectMember.getParent(), symbol.getParent()))
                 return true;
-        System.out.println("Wrong Parents");
         return false;
     }
 

@@ -1,7 +1,6 @@
 package ast.nodes.contents;
 
 import ast.nodes.PrintUtil;
-import ast.nodes.expressions.CustomObject;
 import ast.nodes.expressions.ObjectMember;
 import ast.nodes.expressions.StringLiteral;
 

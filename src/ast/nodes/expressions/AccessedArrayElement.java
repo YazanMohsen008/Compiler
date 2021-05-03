@@ -1,11 +1,13 @@
 package ast.nodes.expressions;
 
 import SymbolTable.Symbol;
+import ast.nodes.PrintUtil;
 import ast.nodes.arithmetic_expressions.ArithmeticExpression;
 import ast.nodes.boolean_expressions.BooleanExpression;
+import ast.nodes.contents.Content;
 
 public class AccessedArrayElement implements BooleanExpression, ArithmeticExpression,
-        ObjectMember {
+        ObjectMember, Content {
     private Identifier identifier;
     private ArithmeticExpression index;
     private ObjectMember parent;
@@ -47,4 +49,12 @@ public class AccessedArrayElement implements BooleanExpression, ArithmeticExpres
     @Override
     public void setSymbol(Symbol symbol) {
         this.symbol=symbol;
-    }}
+    }
+
+    @Override
+    public String toString(int col) {
+        String indent = PrintUtil.getIndent(col);
+        return indent +toString();
+    }
+
+}

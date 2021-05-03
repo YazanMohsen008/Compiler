@@ -40,6 +40,14 @@ STYLE_SHORT_BODY : .*? '</>' -> popMode ;
 
 mode TAG ;
 
+CP_INCLUDE:'cp-include'-> pushMode(CP_MIDDLE) ;
+
+CP_PARAMETERS:'cp-parameters'-> pushMode(CP_MIDDLE) ;
+
+CHANGE:'@change'-> pushMode(CP_MIDDLE) ;
+
+FOCUS:'@focus'-> pushMode(CP_MIDDLE) ;
+
 CP_APP : 'cp-app' -> pushMode(CP_MIDDLE) ;
 
 CP_SWITCH : 'cp-switch' -> pushMode(CP_MIDDLE) ;

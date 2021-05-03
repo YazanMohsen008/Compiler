@@ -16,4 +16,6 @@ public class Array implements Expression {
             textRepresentation += element.toString() + ", ";
         return textRepresentation + "]";
     }
+
+
 }

@@ -1,5 +1,7 @@
 package ast.nodes.attributes;
 
+import ast.nodes.contents.Content;
+
 /**
  * A Marker Interface To Treat All Kinds Of Attribute Values
  * No Matter How Structurally Different They Are To Be Of The Same Type.
@@ -7,5 +9,5 @@ package ast.nodes.attributes;
  * Their Values Of Any Type That Implements This Interface.
  */
 
-public interface AttributeValue {
+public interface AttributeValue  {
 }

@@ -8,8 +8,7 @@ import ast.nodes.boolean_expressions.*;
 import ast.nodes.contents.*;
 import ast.nodes.elements.*;
 import ast.nodes.expressions.*;
-import generated.HTMLParser;
-import generated.HTMLParserBaseVisitor;
+import generated.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,12 +127,40 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     /**
      * attribute Rule
      */
+
+    @Override public Object visitCp_includeAttribute(HTMLParser.Cp_includeAttributeContext ctx)
+    {
+        newScope = false;
+        parentScope = false;
+        return new Attribute(ctx.CP_INCLUDE().getText(),(AttributeValue) visit(ctx.objectChainedMembers()));
+
+    }
+
+    @Override public Object visitCp_parametersAttribute(HTMLParser.Cp_parametersAttributeContext ctx) {
+        newScope = false;
+        parentScope = false;
+        return new Attribute(ctx.CP_PARAMETERS().getText(),(AttributeValue) visit(ctx.objectChainedMembers()));
+
+    }
+    @Override public Object visitChangeAttribute(HTMLParser.ChangeAttributeContext ctx) {
+        newScope = false;
+        parentScope = false;
+        return new Attribute(ctx.CHANGE().getText(),(AttributeValue) visit(ctx.objectChainedMembers()));
+    }
+
+    @Override public Object visitFocusAttribute(HTMLParser.FocusAttributeContext ctx) {
+        newScope = false;
+        parentScope = false;
+        return new Attribute(ctx.FOCUS().getText(),(AttributeValue) visit(ctx.objectChainedMembers()));
+    }
+
     @Override
     public Object visitCp_appAttribute(HTMLParser.Cp_appAttributeContext ctx) {
         newScope = false;
         parentScope = false;
-        return new Attribute(ctx.CP_APP().getText(),
-                (Identifier) visit(ctx.IDENTIFIER()));
+        Identifier identifier = new Identifier(ctx.IDENTIFIER().getText());
+        identifier.setSymbol(getObjectMemberSymbol(identifier));
+        return new Attribute(ctx.CP_APP().getText(),identifier);
     }
 
     @Override
@@ -181,7 +208,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         newScope = false;
         parentScope = false;
         return new Attribute(ctx.CLICK().getText(),
-                (AttributeValue) visit(ctx.functionCall()));
+                (AttributeValue) visit(ctx.objectChainedMembers()));
     }
 
     @Override
@@ -189,7 +216,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         newScope = false;
         parentScope = false;
         return new Attribute(ctx.MOUSEOVER().getText(),
-                (AttributeValue) visit(ctx.functionCall()));
+                (AttributeValue) visit(ctx.objectChainedMembers()));
     }
 
     @Override
@@ -306,6 +333,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
      */
     @Override
     public Object visitNumericLiteral(HTMLParser.NumericLiteralContext ctx) {
+
         return new NumberLiteral(Double.valueOf(ctx.NUMBER().getText()));
     }
 
@@ -324,7 +352,6 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         ObjectMember parentObjectMember = null;
         for (int i = 0; i < ctx.objectMember().size(); i++) {
             ObjectMember objectMember = (ObjectMember) visit(ctx.objectMember(i));
-
             objectMember.setParent(parentObjectMember);
             objectMember.setSymbol(getObjectMemberSymbol(objectMember));
             parentObjectMember = objectMember;
@@ -614,10 +641,6 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     /**
      * curly Rule
      */
-    @Override
-    public Object visitCurlyTernaryOperator(HTMLParser.CurlyTernaryOperatorContext ctx) {
-        return visit(ctx.ternaryOperator());
-    }
 
     @Override
     public Object visitCurlyVariables(HTMLParser.CurlyVariablesContext ctx) {
@@ -646,10 +669,6 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     /**
      * exprToExecute Rule
      */
-    @Override
-    public Object visitPrintingExprToExecute(HTMLParser.PrintingExprToExecuteContext ctx) {
-        return new StringLiteral(ctx.STRING_LITERAL().getText());
-    }
 
     @Override
     public Object visitTernaryExprToExecute(HTMLParser.TernaryExprToExecuteContext ctx) {
@@ -658,6 +677,11 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
 
     @Override
     public Object visitParenthesizedExprToExecute(HTMLParser.ParenthesizedExprToExecuteContext ctx) {
+        return visit(ctx.exprToExecute());
+    }
+
+    @Override
+    public Object visitCurlyExpression(HTMLParser.CurlyExpressionContext ctx) {
         return visit(ctx.exprToExecute());
     }
 
@@ -691,4 +715,5 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
             value = new StringLiteral(ctx.STRING_LITERAL().getText());
         return new Variable(field, value);
     }
+
 }

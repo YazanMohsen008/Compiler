@@ -1,6 +1,7 @@
 package ast.nodes.expressions;
 
 import SymbolTable.Symbol;
+import ast.nodes.contents.Content;
 
 /**
  * A Marker Interface To Treat All Kinds Of Accessed Identifiers

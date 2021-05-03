@@ -51,6 +51,34 @@ public interface HTMLParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStyleElement(HTMLParser.StyleElementContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code cp_includeAttribute}
+	 * labeled alternative in {@link HTMLParser#attribute}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCp_includeAttribute(HTMLParser.Cp_includeAttributeContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code cp_parametersAttribute}
+	 * labeled alternative in {@link HTMLParser#attribute}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCp_parametersAttribute(HTMLParser.Cp_parametersAttributeContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code changeAttribute}
+	 * labeled alternative in {@link HTMLParser#attribute}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitChangeAttribute(HTMLParser.ChangeAttributeContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code focusAttribute}
+	 * labeled alternative in {@link HTMLParser#attribute}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFocusAttribute(HTMLParser.FocusAttributeContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code cp_appAttribute}
 	 * labeled alternative in {@link HTMLParser#attribute}.
 	 * @param ctx the parse tree
@@ -386,19 +414,19 @@ public interface HTMLParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitText(HTMLParser.TextContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code curlyTernaryOperator}
-	 * labeled alternative in {@link HTMLParser#curly}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCurlyTernaryOperator(HTMLParser.CurlyTernaryOperatorContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code curlyVariables}
 	 * labeled alternative in {@link HTMLParser#curly}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitCurlyVariables(HTMLParser.CurlyVariablesContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code curlyExpression}
+	 * labeled alternative in {@link HTMLParser#curly}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCurlyExpression(HTMLParser.CurlyExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code basicTernaryOperator}
 	 * labeled alternative in {@link HTMLParser#ternaryOperator}.
@@ -413,13 +441,6 @@ public interface HTMLParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitParenthesizedTernaryOperator(HTMLParser.ParenthesizedTernaryOperatorContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code printingExprToExecute}
-	 * labeled alternative in {@link HTMLParser#exprToExecute}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPrintingExprToExecute(HTMLParser.PrintingExprToExecuteContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code ternaryExprToExecute}
 	 * labeled alternative in {@link HTMLParser#exprToExecute}.

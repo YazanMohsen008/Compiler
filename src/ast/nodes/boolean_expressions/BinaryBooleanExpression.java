@@ -1,6 +1,9 @@
 package ast.nodes.boolean_expressions;
 
-public class BinaryBooleanExpression implements BooleanExpression {
+import ast.nodes.PrintUtil;
+import ast.nodes.contents.Content;
+
+public class BinaryBooleanExpression implements BooleanExpression,Content {
     private BooleanExpression leftOperand;
     private String operator;
     private BooleanExpression rightOperand;
@@ -19,5 +22,11 @@ public class BinaryBooleanExpression implements BooleanExpression {
         textRepresentation += " " + this.operator + " ";
         textRepresentation += "(" + this.rightOperand + ")";
         return textRepresentation;
+    }
+
+    @Override
+    public String toString(int col) {
+        String indent = PrintUtil.getIndent(col);
+        return indent +toString();
     }
 }
