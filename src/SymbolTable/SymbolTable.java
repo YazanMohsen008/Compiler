@@ -84,7 +84,6 @@ public class SymbolTable {
 
 
     public Symbol getSymbol(ObjectMember objectMember) {
-
         for (Symbol symbol : symbols) {
             if (checkSymbol(objectMember, symbol))
                 return symbol;

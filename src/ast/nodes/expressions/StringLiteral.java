@@ -1,8 +1,9 @@
 package ast.nodes.expressions;
 
 import ast.nodes.PrintUtil;
+import ast.nodes.contents.Content;
 
-public class StringLiteral implements Expression {
+public class StringLiteral implements Expression, Content {
     private String text;
 
     public StringLiteral(String text) {
@@ -16,6 +17,7 @@ public class StringLiteral implements Expression {
     }
 
     public String toString(int col) {
+        //TODO fix indent in Content
         String indent = PrintUtil.getIndent(col);
         return this.text.replaceAll("\n", "\n" + indent);
     }

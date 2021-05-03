@@ -23,6 +23,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     boolean newScope = false;
     boolean parentScope = false;
     boolean fromObjectChained = false;
+    private boolean Found;
 
 
     @Override
@@ -128,30 +129,34 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
      * attribute Rule
      */
 
-    @Override public Object visitCp_includeAttribute(HTMLParser.Cp_includeAttributeContext ctx)
-    {
+    @Override
+    public Object visitCp_includeAttribute(HTMLParser.Cp_includeAttributeContext ctx) {
         newScope = false;
         parentScope = false;
-        return new Attribute(ctx.CP_INCLUDE().getText(),(AttributeValue) visit(ctx.objectChainedMembers()));
+        return new Attribute(ctx.CP_INCLUDE().getText(), (AttributeValue) visit(ctx.objectChainedMembers()));
 
     }
 
-    @Override public Object visitCp_parametersAttribute(HTMLParser.Cp_parametersAttributeContext ctx) {
+    @Override
+    public Object visitCp_parametersAttribute(HTMLParser.Cp_parametersAttributeContext ctx) {
         newScope = false;
         parentScope = false;
-        return new Attribute(ctx.CP_PARAMETERS().getText(),(AttributeValue) visit(ctx.objectChainedMembers()));
+        return new Attribute(ctx.CP_PARAMETERS().getText(), (AttributeValue) visit(ctx.objectChainedMembers()));
 
     }
-    @Override public Object visitChangeAttribute(HTMLParser.ChangeAttributeContext ctx) {
+
+    @Override
+    public Object visitChangeAttribute(HTMLParser.ChangeAttributeContext ctx) {
         newScope = false;
         parentScope = false;
-        return new Attribute(ctx.CHANGE().getText(),(AttributeValue) visit(ctx.objectChainedMembers()));
+        return new Attribute(ctx.CHANGE().getText(), (AttributeValue) visit(ctx.objectChainedMembers()));
     }
 
-    @Override public Object visitFocusAttribute(HTMLParser.FocusAttributeContext ctx) {
+    @Override
+    public Object visitFocusAttribute(HTMLParser.FocusAttributeContext ctx) {
         newScope = false;
         parentScope = false;
-        return new Attribute(ctx.FOCUS().getText(),(AttributeValue) visit(ctx.objectChainedMembers()));
+        return new Attribute(ctx.FOCUS().getText(), (AttributeValue) visit(ctx.objectChainedMembers()));
     }
 
     @Override
@@ -160,7 +165,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         parentScope = false;
         Identifier identifier = new Identifier(ctx.IDENTIFIER().getText());
         identifier.setSymbol(getObjectMemberSymbol(identifier));
-        return new Attribute(ctx.CP_APP().getText(),identifier);
+        return new Attribute(ctx.CP_APP().getText(), identifier);
     }
 
     @Override
@@ -362,25 +367,41 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Symbol getObjectMemberSymbol(ObjectMember objectMember) {
+        Found=false;
         Symbol symbol = null;
         SymbolTable temp = CurrentTable;
 //        cp-model put the Symbol in parent Scope
         if (parentScope) {
             temp = temp.getParent();
             symbol = temp.insert(objectMember);
-        } else {
+        }
+        else {
 //        Getting Reference for old Symbol not new Scope
             if (!newScope) {
                 while (temp != null) {
+
                     symbol = temp.getSymbol(objectMember);
                     if (symbol != null)
                         break;
+                    //Check if Variable parent is in this Scope
+                    ObjectMember objectMemberParent = objectMember.getParent();
+                    while (objectMemberParent != null) {
+                        Symbol symbolParent = temp.getSymbol(objectMemberParent);
+                        if (symbolParent != null) {
+                            Found = true;
+                            break;
+                        }
+                        objectMemberParent = objectMemberParent.getParent();
+                    }
+                    if (Found) break;
                     temp = temp.getParent();
                 }
                 if (temp == null)
                     symbol = GlobalSymbolTableReference.insert(objectMember);
-
-            } else
+                else
+                    symbol = temp.insert(objectMember);
+            }
+            else
                 symbol = temp.insert(objectMember);
         }
         return symbol;
