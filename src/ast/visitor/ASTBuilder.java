@@ -20,10 +20,10 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     SymbolTable GlobalSymbolTableReference = new SymbolTable("Global");
     SymbolTable CurrentTable = GlobalSymbolTableReference;
     SymbolTable ParentTable = GlobalSymbolTableReference;
-    boolean newScope = false;
-    boolean parentScope = false;
+    boolean ForceDeclaration = false;
+    boolean newDeclaration = false;
     boolean fromObjectChained = false;
-    private boolean Found;
+
 
 
     @Override
@@ -42,7 +42,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
 
         List<Element> elements = new ArrayList<>();
         for (int i = 0; i < ctx.element().size(); i++) {
-            ParentTable = GlobalSymbolTableReference;
+//            ParentTable = GlobalSymbolTableReference;
             Element element = (Element) visit(ctx.element(i));
             elements.add(element);
         }
@@ -72,17 +72,15 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         String openingTagName = ctx.TAG_NAME(0).getText();
         htmlElement.setOpeningTagName(openingTagName);
 
-        SymbolTable symbolTable = new SymbolTable(openingTagName);
-        CurrentTable = symbolTable;
-        symbolTable.setParent(ParentTable);
-        ParentTable.addChild(symbolTable);
-
-        htmlElement.setSymbolTable(symbolTable);
+        boolean ScopeOpened=false;
         List<Attribute> attributes = new ArrayList<>();
-        for (int i = 0; i < ctx.attribute().size(); i++)
-            attributes.add((Attribute) visit(ctx.attribute(i)));
+        for (int i = 0; i < ctx.attribute().size(); i++) {
+            Attribute attribute =(Attribute) visit(ctx.attribute(i));
+            //Check if This attribute had opened New Scope ,,, the OR is to make Sure that if Scope Opened not to make it false
+            ScopeOpened= ScopeOpened || attribute.ScopeOpened();
+            attributes.add(attribute);
+        }
         htmlElement.setAttributes(attributes);
-
 
         List<Content> contents = null;
         // If It's An Empty Element, Then It Has No Content.
@@ -93,10 +91,14 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
             contents = new ArrayList<>();
             //TO Get its Children
             for (int i = 0; i < ctx.content().size(); i++) {
-                ParentTable = symbolTable;
                 Content content = (Content) visit(ctx.content(i));
                 contents.add(content);
             }
+        }
+        //Pop the Opened Scope
+        if(CurrentTable.getParent()!=null && ScopeOpened) {
+            CurrentTable = CurrentTable.getParent();
+            ParentTable = ParentTable.getParent();
         }
         htmlElement.setClosingTagName(closingTagName);
         htmlElement.setContents(contents);
@@ -125,101 +127,114 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    private SymbolTable  openScope (String ScopeName){
+        SymbolTable symbolTable = new SymbolTable(ScopeName);
+        CurrentTable = symbolTable;
+        symbolTable.setParent(ParentTable);
+        ParentTable.addChild(symbolTable);
+        ParentTable = symbolTable;
+        return  symbolTable;
+    }
+
     /**
      * attribute Rule
      */
 
     @Override
     public Object visitCp_includeAttribute(HTMLParser.Cp_includeAttributeContext ctx) {
-        newScope = false;
-        parentScope = false;
+        ForceDeclaration = false;
+        newDeclaration = false;
         return new Attribute(ctx.CP_INCLUDE().getText(), (AttributeValue) visit(ctx.objectChainedMembers()));
 
     }
 
     @Override
     public Object visitCp_parametersAttribute(HTMLParser.Cp_parametersAttributeContext ctx) {
-        newScope = false;
-        parentScope = false;
+        ForceDeclaration = false;
+        newDeclaration = false;
         return new Attribute(ctx.CP_PARAMETERS().getText(), (AttributeValue) visit(ctx.objectChainedMembers()));
 
     }
 
     @Override
     public Object visitChangeAttribute(HTMLParser.ChangeAttributeContext ctx) {
-        newScope = false;
-        parentScope = false;
+        ForceDeclaration = false;
+        newDeclaration = false;
         return new Attribute(ctx.CHANGE().getText(), (AttributeValue) visit(ctx.objectChainedMembers()));
     }
 
     @Override
     public Object visitFocusAttribute(HTMLParser.FocusAttributeContext ctx) {
-        newScope = false;
-        parentScope = false;
+        ForceDeclaration = false;
+        newDeclaration = false;
         return new Attribute(ctx.FOCUS().getText(), (AttributeValue) visit(ctx.objectChainedMembers()));
     }
 
     @Override
     public Object visitCp_appAttribute(HTMLParser.Cp_appAttributeContext ctx) {
-        newScope = false;
-        parentScope = false;
+        ForceDeclaration = false;
+        newDeclaration = false;
         Identifier identifier = new Identifier(ctx.IDENTIFIER().getText());
+        SymbolTable symbolTable=openScope(ctx.CP_APP().getText());
         identifier.setSymbol(getObjectMemberSymbol(identifier));
-        return new Attribute(ctx.CP_APP().getText(), identifier);
+        return new Attribute(ctx.CP_APP().getText(), identifier,symbolTable,HTMLLexer.CP_APP);
     }
 
     @Override
     public Object visitCp_showAttribute(HTMLParser.Cp_showAttributeContext ctx) {
-        newScope = false;
-        parentScope = false;
-        return new Attribute(ctx.CP_SHOW().getText(),
+        ForceDeclaration = false;
+        newDeclaration = false;
+
+                return new Attribute(ctx.CP_SHOW().getText(),
                 (AttributeValue) visit(ctx.booleanExpression()));
     }
 
     @Override
     public Object visitCp_hideAttribute(HTMLParser.Cp_hideAttributeContext ctx) {
-        newScope = false;
-        parentScope = false;
+        ForceDeclaration = false;
+        newDeclaration = false;
         return new Attribute(ctx.CP_HIDE().getText(),
                 (AttributeValue) visit(ctx.booleanExpression()));
     }
 
     @Override
     public Object visitCp_ifAttribute(HTMLParser.Cp_ifAttributeContext ctx) {
-        newScope = false;
-        parentScope = false;
+        ForceDeclaration = false;
+        newDeclaration = false;
+        SymbolTable symbolTable=openScope(ctx.CP_IF().getText());
         return new Attribute(ctx.CP_IF().getText(),
-                (AttributeValue) visit(ctx.booleanExpression()));
+                (AttributeValue) visit(ctx.booleanExpression()),symbolTable,HTMLLexer.CP_IF);
     }
 
     @Override
     public Object visitCp_forAttribute(HTMLParser.Cp_forAttributeContext ctx) {
-        newScope = true;
-        parentScope = false;
+        ForceDeclaration = true;
+        newDeclaration = false;
+        SymbolTable symbolTable=openScope(ctx.CP_FOR().getText());
         return new Attribute(ctx.CP_FOR().getText(),
-                (AttributeValue) visit(ctx.forLoop()));
+                (AttributeValue) visit(ctx.forLoop()),symbolTable,HTMLLexer.CP_FOR);
     }
 
     @Override
     public Object visitCp_modelAttribute(HTMLParser.Cp_modelAttributeContext ctx) {
-        newScope = false;
-        parentScope = true;
+        ForceDeclaration = false;
+        newDeclaration = true;
         return new Attribute(ctx.CP_MODEL().getText(),
                 (AttributeValue) visit(ctx.numericValue()));
     }
 
     @Override
     public Object visitClickAttribute(HTMLParser.ClickAttributeContext ctx) {
-        newScope = false;
-        parentScope = false;
+        ForceDeclaration = false;
+        newDeclaration = false;
         return new Attribute(ctx.CLICK().getText(),
                 (AttributeValue) visit(ctx.objectChainedMembers()));
     }
 
     @Override
     public Object visitMouseoverAttribute(HTMLParser.MouseoverAttributeContext ctx) {
-        newScope = false;
-        parentScope = false;
+        ForceDeclaration = false;
+        newDeclaration = false;
         return new Attribute(ctx.MOUSEOVER().getText(),
                 (AttributeValue) visit(ctx.objectChainedMembers()));
     }
@@ -367,17 +382,16 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Symbol getObjectMemberSymbol(ObjectMember objectMember) {
-        Found=false;
+        boolean found = false;
         Symbol symbol = null;
         SymbolTable temp = CurrentTable;
-//        cp-model put the Symbol in parent Scope
-        if (parentScope) {
-            temp = temp.getParent();
+//        cp-model put the Symbol in Current Scope
+        if (newDeclaration) {
             symbol = temp.insert(objectMember);
         }
         else {
 //        Getting Reference for old Symbol not new Scope
-            if (!newScope) {
+            if (!ForceDeclaration) {
                 while (temp != null) {
 
                     symbol = temp.getSymbol(objectMember);
@@ -388,12 +402,12 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
                     while (objectMemberParent != null) {
                         Symbol symbolParent = temp.getSymbol(objectMemberParent);
                         if (symbolParent != null) {
-                            Found = true;
+                            found = true;
                             break;
                         }
                         objectMemberParent = objectMemberParent.getParent();
                     }
-                    if (Found) break;
+                    if (found) break;
                     temp = temp.getParent();
                 }
                 if (temp == null)
@@ -497,13 +511,13 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     @Override
     public Object visitForLoop1(HTMLParser.ForLoop1Context ctx) {
 
-        newScope = true;
+        ForceDeclaration = true;
         Identifier value = new Identifier(ctx.IDENTIFIER(0).getText());
         value.setSymbol(getObjectMemberSymbol(value));
 
         Expression object = null;
         Identifier index = null;
-        newScope = false;
+        ForceDeclaration = false;
         if (ctx.objectChainedMembers() != null) {
             object = (Expression) visit(ctx.objectChainedMembers());
         }
@@ -511,7 +525,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         if (ctx.array() != null) {
             object = (Expression) visit(ctx.array());
         }
-        newScope = true;
+        ForceDeclaration = true;
         if (ctx.ASSIGNMENT() != null) {
             index = new Identifier(ctx.IDENTIFIER(1).getText());
             value.setSymbol(getObjectMemberSymbol(index));
@@ -521,7 +535,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
 
     @Override
     public Object visitForLoop2(HTMLParser.ForLoop2Context ctx) {
-        newScope = true;
+        ForceDeclaration = true;
         Identifier key = new Identifier(ctx.IDENTIFIER(0).getText());
         key.setSymbol(getObjectMemberSymbol(key));
 
@@ -529,7 +543,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         Identifier value = new Identifier(ctx.IDENTIFIER(1).getText());
         value.setSymbol(getObjectMemberSymbol(value));
 
-        newScope = false;
+        ForceDeclaration = false;
         Expression object = (Expression) visit(ctx.objectChainedMembers());
         return new ForLoop(key, value, object);
     }
@@ -599,33 +613,43 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     /**
      * switchCase
      */
+
     @Override
     public Object visitSwitchCase(HTMLParser.SwitchCaseContext ctx) {
         String openingTagName = ctx.TAG_NAME(0).getText();
         String closingTagName = ctx.TAG_NAME(1).getText();
 
+        List<Attribute> attributes = new ArrayList<>();
+        for (HTMLParser.AttributeContext attribute : ctx.attribute()) {
+            Attribute attributeObject =(Attribute) visit(attribute);
+            attributes.add(attributeObject);
+        }
+        attributes.add((Attribute) visit(ctx.switchCaseAttribute()));
+
         List<Content> contents = new ArrayList<>();
         for (int i = 0; i < ctx.content().size(); i++)
             contents.add((Content) visit(ctx.content(i)));
 
-        List<Attribute> attributes = new ArrayList<>();
-        for (HTMLParser.AttributeContext attribute : ctx.attribute())
-            attributes.add((Attribute) visit(attribute));
-
-        attributes.add((Attribute) visit(ctx.switchCaseAttribute()));
+        if(ParentTable.getParent()!=null)
+            ParentTable=ParentTable.getParent();
         return new SwitchCaseElement(openingTagName, closingTagName,
                 attributes, contents);
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     /**
      * switchCaseAttribute Rule
      */
     @Override
     public Object visitSwitchCaseAttribute(HTMLParser.SwitchCaseAttributeContext ctx) {
-        if (ctx.CP_SWITCH_CASE() != null)
-            return new Attribute(ctx.CP_SWITCH_CASE().getText(), (Expression) visit(ctx.expression()));
-        return new Attribute(ctx.CP_SWITCH_DEFAULT().getText(), null);
+
+        if (ctx.CP_SWITCH_CASE() != null) {
+            SymbolTable symbolTable=openScope(ctx.CP_SWITCH_CASE().getText());
+            return new Attribute(ctx.CP_SWITCH_CASE().getText(), (Expression) visit(ctx.expression()),symbolTable,HTMLLexer.CP_SWITCH_CASE);
+        }
+        SymbolTable symbolTable=openScope(ctx.CP_SWITCH_DEFAULT().getText());
+        return new Attribute(ctx.CP_SWITCH_DEFAULT().getText(), null,symbolTable,HTMLLexer.CP_SWITCH_DEFAULT);
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -644,8 +668,8 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
 
     @Override
     public Object visitCurlyContent(HTMLParser.CurlyContentContext ctx) {
-        parentScope = false;
-        newScope = false;
+        newDeclaration = false;
+        ForceDeclaration = false;
         return visit(ctx.curly());
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -3,12 +3,17 @@
   <component name="ChangeListManager">
     <list default="true" id="ea43e868-68f0-49bb-9f3c-47e3b5c21a1d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/SymbolTable/SymbolTable.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/SymbolTable/SymbolTable.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/attributes/Attribute.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/attributes/Attribute.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/visitor/ASTBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/visitor/ASTBuilder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/gen/HTMLLexer.interp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/gen/HTMLLexer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/gen/HTMLLexer.tokens" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/samples/samples.txt" beforeDir="false" afterPath="$PROJECT_DIR$/samples/samples.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SymbolTable/SymbolTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SymbolTable/SymbolTable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ast/nodes/contents/TernaryOperator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/contents/TernaryOperator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ast/nodes/expressions/StringLiteral.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/expressions/StringLiteral.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/nodes/attributes/Attribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/attributes/Attribute.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ast/visitor/ASTBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/visitor/ASTBuilder.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -87,15 +92,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/ast/visitor/ASTBuilder.java</url>
-          <line>379</line>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="temp.symbols" />

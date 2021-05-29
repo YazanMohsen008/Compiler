@@ -54,6 +54,7 @@ public class SymbolTable {
 
 
     public void print() {
+//        if(symbols.size()==0)return;
         System.out.print("Symbol Table : " + name);
         if (parent != null)
             System.out.println(" SON OF " + parent.name);
