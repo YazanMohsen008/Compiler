@@ -10,15 +10,18 @@ public class HtmlDocument extends Node {
     private XML XMLElement;
     private DTD DTDElement;
     private List<Element> elements;
+    private List<String> HTMLDocIDs;
+    public static final String ID="id";
 
     public HtmlDocument(List<Scriptlet> scriptletElements, XML XMLElement,
-                        DTD DTDElement, List<Element> elements) {
+                        DTD DTDElement, List<Element> elements, List<String>HTMLDocIDs) {
         this.scriptletElements = scriptletElements;
         this.XMLElement = XMLElement;
         this.DTDElement = DTDElement;
         this.elements = elements;
-
+        this.HTMLDocIDs = HTMLDocIDs;
     }
+
 
     @Override
     public String toString() {

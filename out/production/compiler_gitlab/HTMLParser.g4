@@ -164,8 +164,8 @@ content
 text : (HTML_TEXT | CURLY_OPEN)+ ;
 
 curly
-    : DOUBLE_CURLY_OPEN variables DOUBLE_CURLY_CLOSE         #curlyVariables
-    | DOUBLE_CURLY_OPEN exprToExecute DOUBLE_CURLY_CLOSE     #curlyExpression
+    : DOUBLE_CURLY_OPEN pipedVariable DOUBLE_CURLY_CLOSE         #curlyVariables
+    | DOUBLE_CURLY_OPEN exprToExecute DOUBLE_CURLY_CLOSE         #curlyExpression
     ;
 
 ternaryOperator
@@ -179,6 +179,11 @@ exprToExecute
     | expression                                              #exp
     ;
 
-variables : variable (PIPE variable)* ;
+pipeNames:DATE |CURRENCY|UPPER |LOWER;
+
+pipes
+    :(PIPE pipeNames (COLON STRING_LITERAL)?)              #pipe
+    ;
+pipedVariable : variable pipes*;
 
 variable : objectChainedMembers (COLON STRING_LITERAL)? ;

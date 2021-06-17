@@ -13,6 +13,15 @@ public class HTMLElement implements Element {
     private List<Content> contents;
     private SymbolTable symbolTable;
 
+    private boolean structuralAttribute;
+
+    public  static final String A_ELEMENT="a";
+    public  static final String IMG_ELEMENT="img";
+    public  static final String LI_ELEMENT="li";
+    public  static final String UL_ELEMENT="ul";
+    public  static final String OL_ELEMENT="ol";
+
+
     public HTMLElement() {
     }
 
@@ -97,5 +106,31 @@ public class HTMLElement implements Element {
             textRepresentation += indent + "Closing Tag Name: " + this.closingTagName + "\n";
         textRepresentation += indent + "-----------------------\n";
         return textRepresentation;
+    }
+
+    public boolean isA() {
+        return  openingTagName.equals(A_ELEMENT);
+    }
+
+    public boolean isImg() {
+        return  openingTagName.equals(IMG_ELEMENT);
+    }
+
+    public boolean hasStructuralAttribute() {
+        return structuralAttribute;
+    }
+
+    public void setStructuralAttribute() {
+        structuralAttribute=true;
+    }
+
+    public boolean isLi() {
+        return  openingTagName.equals(LI_ELEMENT);}
+
+    public boolean isUl() {
+        return  openingTagName.equals(UL_ELEMENT);
+    }
+    public boolean isOl() {
+        return  openingTagName.equals(OL_ELEMENT);
     }
 }

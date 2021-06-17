@@ -130,6 +130,10 @@ TRUE                : 'true' ;
 FALSE               : 'false';
 NULL                : 'null' ;
 INDEX               : 'index' ;
+DATE                : 'date' ;
+CURRENCY            : 'currency' ;
+UPPER               : 'upper' ;
+LOWER               : 'lower' ;
 
  AND : 'AND' | 'and' | '&&' ;
  OR  : 'OR'  | 'or'  | '||' ;
@@ -154,6 +158,7 @@ IDENTIFIER : ID_FIRST_CHAR ID_CHAR* ;
 CP_WS : [ \t\r\n] -> skip ;
 
 NUMBER : DIGIT+ (DOT DIGIT+)? ;
+
 
 STRING_LITERAL
     : '\'' (ESCAPE | .)*? '\''

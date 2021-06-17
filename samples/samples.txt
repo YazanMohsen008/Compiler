@@ -1,9 +1,6 @@
 <html>
-<body>
-  <form>
-      <input type="text" cp-model="form.name " />
-      <input type="text" cp-if="needAge || xx"  cp-model="form.age"/>
-      <input type="text" cp-model="form.email" />
-  </form>
-</body>
+
+    <p cp-for="x in t">
+        <a cp-model="x"></a>
+    </p>
 </html>

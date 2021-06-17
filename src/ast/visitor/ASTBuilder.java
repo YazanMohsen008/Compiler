@@ -24,7 +24,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     boolean newDeclaration = false;
     boolean fromObjectChained = false;
 
-
+    ArrayList<String> HTMLDocIDs = new ArrayList<>();
 
     @Override
     public Object visitHtmlDocument(HTMLParser.HtmlDocumentContext ctx) {
@@ -42,15 +42,13 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
 
         List<Element> elements = new ArrayList<>();
         for (int i = 0; i < ctx.element().size(); i++) {
-//            ParentTable = GlobalSymbolTableReference;
             Element element = (Element) visit(ctx.element(i));
             elements.add(element);
         }
 
-
         printSymbolTableTree(GlobalSymbolTableReference);
 
-        return new HtmlDocument(scriptlets, xml, dtd, elements);
+        return new HtmlDocument(scriptlets, xml, dtd, elements, HTMLDocIDs);
     }
 
     private void printSymbolTableTree(SymbolTable symbolTable) {
@@ -62,24 +60,59 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    HTMLElement ParentElement;
+
     /**
      * element Rule
      */
     @Override
     public HTMLElement visitHtmlElement(HTMLParser.HtmlElementContext ctx) {
         HTMLElement htmlElement = new HTMLElement();
-
         String openingTagName = ctx.TAG_NAME(0).getText();
         htmlElement.setOpeningTagName(openingTagName);
 
-        boolean ScopeOpened=false;
+        boolean ScopeOpened = false;
+        boolean validElement = false;
         List<Attribute> attributes = new ArrayList<>();
         for (int i = 0; i < ctx.attribute().size(); i++) {
-            Attribute attribute =(Attribute) visit(ctx.attribute(i));
-            //Check if This attribute had opened New Scope ,,, the OR is to make Sure that if Scope Opened not to make it false
-            ScopeOpened= ScopeOpened || attribute.ScopeOpened();
+            Attribute attribute = (Attribute) visit(ctx.attribute(i));
+            //Check if This attribute had opened New Scope ... the OR is to make Sure that if Scope Opened not to make it false
+            ScopeOpened = ScopeOpened || attribute.ScopeOpened();
+
+            if (htmlElement.isA() && attribute.isHref())
+                validElement = true;
+
+            if (htmlElement.isImg() && attribute.isSrc())
+                validElement = true;
+
+            if (attribute.isStructural()) {
+                if (htmlElement.hasStructuralAttribute()) {
+                    // Semantic : 5. Each html element has at most one structural attribute (one statement) (if/show/hide/for/case).
+                    System.err.println("error in Line " + ctx.start.getLine() + " multiple structural attributes in Element");
+//                    System.exit(-1);
+                } else
+                    htmlElement.setStructuralAttribute();
+            }
             attributes.add(attribute);
         }
+
+        //  Semantic 3: li tag should not be outside ul/ol.
+        if (htmlElement.isLi() && !(ParentElement.isUl() || ParentElement.isOl())) {
+            System.err.println("error in Line " + ctx.start.getLine() + "  The Li  Tag <li> should not be outside ul/ol. ");
+//            System.exit(-1);
+        }
+
+        //  Semantic 6: img tag must has src attribute.
+        if (htmlElement.isImg() && !validElement) {
+            System.err.println("error in Line " + ctx.start.getLine() + " The img tag  <img> Must have src attribute ");
+//            System.exit(-1);
+        }
+        //  Semantic 7: Anchor tag must has href attribute (anchor tag is <a>).
+        if (htmlElement.isA() && !validElement) {
+            System.err.println("error in Line " + ctx.start.getLine() + " The anchor  Tag <a> Must have href attribute ");
+//            System.exit(-1);
+        }
+
         htmlElement.setAttributes(attributes);
 
         List<Content> contents = null;
@@ -87,16 +120,16 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         String closingTagName = null;
         if (ctx.TAG_NAME(1) != null) {
             closingTagName = ctx.TAG_NAME(1).getText();
-
             contents = new ArrayList<>();
             //TO Get its Children
             for (int i = 0; i < ctx.content().size(); i++) {
+                ParentElement = htmlElement;
                 Content content = (Content) visit(ctx.content(i));
                 contents.add(content);
             }
         }
         //Pop the Opened Scope
-        if(CurrentTable.getParent()!=null && ScopeOpened) {
+        if (CurrentTable.getParent() != null && ScopeOpened) {
             CurrentTable = CurrentTable.getParent();
             ParentTable = ParentTable.getParent();
         }
@@ -127,13 +160,13 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private SymbolTable  openScope (String ScopeName){
+    private SymbolTable openScope(String ScopeName) {
         SymbolTable symbolTable = new SymbolTable(ScopeName);
         CurrentTable = symbolTable;
         symbolTable.setParent(ParentTable);
         ParentTable.addChild(symbolTable);
         ParentTable = symbolTable;
-        return  symbolTable;
+        return symbolTable;
     }
 
     /**
@@ -175,18 +208,26 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         ForceDeclaration = false;
         newDeclaration = false;
         Identifier identifier = new Identifier(ctx.IDENTIFIER().getText());
-        SymbolTable symbolTable=openScope(ctx.CP_APP().getText());
+        SymbolTable temp = CurrentTable;
+        while (temp != null) {
+            //Semantic 4 : Nested cp-app is forbidden.
+            if (temp.getName().equals(ctx.CP_APP().getText())) {
+                System.err.println("error in line " + ctx.start.getLine() + " Nested cp-app is forbidden");
+//                System.exit(-1);
+            }
+            temp = temp.getParent();
+        }
+        SymbolTable symbolTable = openScope(ctx.CP_APP().getText());
         identifier.setSymbol(getObjectMemberSymbol(identifier));
-        return new Attribute(ctx.CP_APP().getText(), identifier,symbolTable,HTMLLexer.CP_APP);
+        return new Attribute(ctx.CP_APP().getText(), identifier, symbolTable, HTMLLexer.CP_APP);
     }
 
     @Override
     public Object visitCp_showAttribute(HTMLParser.Cp_showAttributeContext ctx) {
         ForceDeclaration = false;
         newDeclaration = false;
-
-                return new Attribute(ctx.CP_SHOW().getText(),
-                (AttributeValue) visit(ctx.booleanExpression()));
+        return new Attribute(ctx.CP_SHOW().getText(),
+                (AttributeValue) visit(ctx.booleanExpression()), HTMLLexer.CP_SHOW);
     }
 
     @Override
@@ -194,25 +235,25 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         ForceDeclaration = false;
         newDeclaration = false;
         return new Attribute(ctx.CP_HIDE().getText(),
-                (AttributeValue) visit(ctx.booleanExpression()));
+                (AttributeValue) visit(ctx.booleanExpression()), HTMLLexer.CP_HIDE);
     }
 
     @Override
     public Object visitCp_ifAttribute(HTMLParser.Cp_ifAttributeContext ctx) {
         ForceDeclaration = false;
         newDeclaration = false;
-        SymbolTable symbolTable=openScope(ctx.CP_IF().getText());
+        SymbolTable symbolTable = openScope(ctx.CP_IF().getText());
         return new Attribute(ctx.CP_IF().getText(),
-                (AttributeValue) visit(ctx.booleanExpression()),symbolTable,HTMLLexer.CP_IF);
+                (AttributeValue) visit(ctx.booleanExpression()), symbolTable, HTMLLexer.CP_IF);
     }
 
     @Override
     public Object visitCp_forAttribute(HTMLParser.Cp_forAttributeContext ctx) {
         ForceDeclaration = true;
         newDeclaration = false;
-        SymbolTable symbolTable=openScope(ctx.CP_FOR().getText());
+        SymbolTable symbolTable = openScope(ctx.CP_FOR().getText());
         return new Attribute(ctx.CP_FOR().getText(),
-                (AttributeValue) visit(ctx.forLoop()),symbolTable,HTMLLexer.CP_FOR);
+                (AttributeValue) visit(ctx.forLoop()), symbolTable, HTMLLexer.CP_FOR);
     }
 
     @Override
@@ -239,10 +280,20 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
                 (AttributeValue) visit(ctx.objectChainedMembers()));
     }
 
+
     @Override
     public Object visitNon_cpAttribute(HTMLParser.Non_cpAttributeContext ctx) {
+        if (ctx.TAG_NAME().getText().equals(HtmlDocument.ID)) {
+            //  Semantic 1: Html id attribute MUST be unique on document level.
+            if (HTMLDocIDs.contains(ctx.ATTVALUE_VALUE().getText())) {
+                System.err.println("error in line" + ctx.start.getLine() + " this id Value " + ctx.ATTVALUE_VALUE() + " had been used before");
+//                System.exit(-1);
+            } else
+                HTMLDocIDs.add(ctx.ATTVALUE_VALUE().getText());
+        }
         return new Attribute(ctx.TAG_NAME().getText(),
                 new StringLiteral(ctx.ATTVALUE_VALUE().getText()));
+
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -388,12 +439,10 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
 //        cp-model put the Symbol in Current Scope
         if (newDeclaration) {
             symbol = temp.insert(objectMember);
-        }
-        else {
+        } else {
 //        Getting Reference for old Symbol not new Scope
             if (!ForceDeclaration) {
                 while (temp != null) {
-
                     symbol = temp.getSymbol(objectMember);
                     if (symbol != null)
                         break;
@@ -414,9 +463,42 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
                     symbol = GlobalSymbolTableReference.insert(objectMember);
                 else
                     symbol = temp.insert(objectMember);
+            } else {
+                //Semantic 2:  The iterator variable should not repeat.
+                while (temp != null) {
+
+                    //Check if the Scope is For Scope
+                    while (temp != null && !temp.getName().equals("cp-for"))
+                        temp = temp.getParent();
+
+                    //Check  if we Reach the root to break from outside while Loop
+                    if (temp == null) break;
+
+                    //Search for variable
+                    symbol = temp.getSymbol(objectMember);
+                    if (symbol != null)
+                        break;
+                    //Check if Variable parent is in this Scope
+                    ObjectMember objectMemberParent = objectMember.getParent();
+                    while (objectMemberParent != null) {
+                        Symbol symbolParent = temp.getSymbol(objectMemberParent);
+                        if (symbolParent != null) {
+                            found = true;
+                            break;
+                        }
+                        objectMemberParent = objectMemberParent.getParent();
+                    }
+                    if (found) break;
+                    temp = temp.getParent();
+                }
+                if (temp == null) {
+                    symbol = CurrentTable.insert(objectMember);
+                } else {
+                    System.err.println("error in Line " + forErrorLine +"  " + objectMember.getName() + " iterator should not repeat");
+//                    System.exit(-1);
+                }
+
             }
-            else
-                symbol = temp.insert(objectMember);
         }
         return symbol;
     }
@@ -508,9 +590,12 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     /**
      * forLoop Rule
      */
+    int forErrorLine;
+
     @Override
     public Object visitForLoop1(HTMLParser.ForLoop1Context ctx) {
 
+        forErrorLine = ctx.start.getLine();
         ForceDeclaration = true;
         Identifier value = new Identifier(ctx.IDENTIFIER(0).getText());
         value.setSymbol(getObjectMemberSymbol(value));
@@ -535,6 +620,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
 
     @Override
     public Object visitForLoop2(HTMLParser.ForLoop2Context ctx) {
+        forErrorLine = ctx.start.getLine();
         ForceDeclaration = true;
         Identifier key = new Identifier(ctx.IDENTIFIER(0).getText());
         key.setSymbol(getObjectMemberSymbol(key));
@@ -621,7 +707,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
 
         List<Attribute> attributes = new ArrayList<>();
         for (HTMLParser.AttributeContext attribute : ctx.attribute()) {
-            Attribute attributeObject =(Attribute) visit(attribute);
+            Attribute attributeObject = (Attribute) visit(attribute);
             attributes.add(attributeObject);
         }
         attributes.add((Attribute) visit(ctx.switchCaseAttribute()));
@@ -630,8 +716,8 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         for (int i = 0; i < ctx.content().size(); i++)
             contents.add((Content) visit(ctx.content(i)));
 
-        if(ParentTable.getParent()!=null)
-            ParentTable=ParentTable.getParent();
+        if (ParentTable.getParent() != null)
+            ParentTable = ParentTable.getParent();
         return new SwitchCaseElement(openingTagName, closingTagName,
                 attributes, contents);
     }
@@ -645,11 +731,11 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     public Object visitSwitchCaseAttribute(HTMLParser.SwitchCaseAttributeContext ctx) {
 
         if (ctx.CP_SWITCH_CASE() != null) {
-            SymbolTable symbolTable=openScope(ctx.CP_SWITCH_CASE().getText());
-            return new Attribute(ctx.CP_SWITCH_CASE().getText(), (Expression) visit(ctx.expression()),symbolTable,HTMLLexer.CP_SWITCH_CASE);
+            SymbolTable symbolTable = openScope(ctx.CP_SWITCH_CASE().getText());
+            return new Attribute(ctx.CP_SWITCH_CASE().getText(), (Expression) visit(ctx.expression()), symbolTable, HTMLLexer.CP_SWITCH_CASE);
         }
-        SymbolTable symbolTable=openScope(ctx.CP_SWITCH_DEFAULT().getText());
-        return new Attribute(ctx.CP_SWITCH_DEFAULT().getText(), null,symbolTable,HTMLLexer.CP_SWITCH_DEFAULT);
+        SymbolTable symbolTable = openScope(ctx.CP_SWITCH_DEFAULT().getText());
+        return new Attribute(ctx.CP_SWITCH_DEFAULT().getText(), null, symbolTable, HTMLLexer.CP_SWITCH_DEFAULT);
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -689,7 +775,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
 
     @Override
     public Object visitCurlyVariables(HTMLParser.CurlyVariablesContext ctx) {
-        return visit(ctx.variables());
+        return visit(ctx.pipedVariable());
     }
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -735,19 +821,32 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         return visit(ctx.expression());
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * variables Rule
-     */
-    @Override
-    public Object visitVariables(HTMLParser.VariablesContext ctx) {
-        List<Variable> variables = new ArrayList<>();
-        for (int i = 0; i < ctx.variable().size(); i++)
-            variables.add((Variable) visit(ctx.variable(i)));
-        return new Variables(variables);
+
+
+    @Override public Object visitPipe(HTMLParser.PipeContext ctx) {
+        if(ctx.STRING_LITERAL()==null)
+        return new Pipe(ctx.pipeNames().getText());
+        return new Pipe(ctx.pipeNames().getText(), ctx.STRING_LITERAL().toString());
     }
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public Object visitPipedVariable(HTMLParser.PipedVariableContext ctx) {
+        Variable variable=(Variable) visit(ctx.variable());
+        List<Pipe> pipes = new ArrayList<>();
+        for (int i = 0; i < ctx.pipes().size(); i++) {
+            Pipe pipe=(Pipe) visit(ctx.pipes(i));
+            String errorMessage=pipe.validatePipe();
+            if(errorMessage!=null)
+            {
+                // Semantic : 8,9,10. pipe Validation
+                System.err.println("error in Line "+ ctx.start.getLine()+"  "+errorMessage);
+//                System.exit(-1);
+            }
+            pipes.add((Pipe) visit(ctx.pipes(i)));
+        }
+        return new PipedVariable(variable,pipes);
+    }
+
 
     /**
      * variable Rule

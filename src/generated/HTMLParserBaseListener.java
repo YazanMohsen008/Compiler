@@ -1,5 +1,6 @@
-// Generated from D:/College/Compiler/compiler/src\HTMLParser.g4 by ANTLR 4.9.1
 package generated;
+// Generated from D:/College/Compiler/compiler/src\HTMLParser.g4 by ANTLR 4.9.1
+
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -819,13 +820,37 @@ public class HTMLParserBaseListener implements HTMLParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVariables(HTMLParser.VariablesContext ctx) { }
+	@Override public void enterPipeNames(HTMLParser.PipeNamesContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVariables(HTMLParser.VariablesContext ctx) { }
+	@Override public void exitPipeNames(HTMLParser.PipeNamesContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPipe(HTMLParser.PipeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPipe(HTMLParser.PipeContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPipedVariable(HTMLParser.PipedVariableContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPipedVariable(HTMLParser.PipedVariableContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

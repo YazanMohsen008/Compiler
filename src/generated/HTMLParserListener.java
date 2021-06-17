@@ -1,5 +1,5 @@
-// Generated from D:/College/Compiler/compiler/src\HTMLParser.g4 by ANTLR 4.9.1
 package generated;
+// Generated from D:/College/Compiler/compiler/src\HTMLParser.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -780,15 +780,37 @@ public interface HTMLParserListener extends ParseTreeListener {
 	 */
 	void exitExp(HTMLParser.ExpContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link HTMLParser#variables}.
+	 * Enter a parse tree produced by {@link HTMLParser#pipeNames}.
 	 * @param ctx the parse tree
 	 */
-	void enterVariables(HTMLParser.VariablesContext ctx);
+	void enterPipeNames(HTMLParser.PipeNamesContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link HTMLParser#variables}.
+	 * Exit a parse tree produced by {@link HTMLParser#pipeNames}.
 	 * @param ctx the parse tree
 	 */
-	void exitVariables(HTMLParser.VariablesContext ctx);
+	void exitPipeNames(HTMLParser.PipeNamesContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code pipe}
+	 * labeled alternative in {@link HTMLParser#pipes}.
+	 * @param ctx the parse tree
+	 */
+	void enterPipe(HTMLParser.PipeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code pipe}
+	 * labeled alternative in {@link HTMLParser#pipes}.
+	 * @param ctx the parse tree
+	 */
+	void exitPipe(HTMLParser.PipeContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link HTMLParser#pipedVariable}.
+	 * @param ctx the parse tree
+	 */
+	void enterPipedVariable(HTMLParser.PipedVariableContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link HTMLParser#pipedVariable}.
+	 * @param ctx the parse tree
+	 */
+	void exitPipedVariable(HTMLParser.PipedVariableContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link HTMLParser#variable}.
 	 * @param ctx the parse tree
