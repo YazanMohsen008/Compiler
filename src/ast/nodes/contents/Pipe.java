@@ -16,11 +16,9 @@ public class Pipe {
         this.name = name;
     }
 
-    public Pipe(String name, String parameter) {
-        this.name = name;
+    public void setParameter(String parameter){
         this.parameter = parameter.substring(1,parameter.length()-1);
     }
-
     public String validatePipe() {
 
         switch (name) {
@@ -32,8 +30,9 @@ public class Pipe {
                 return (parameter == null) ? null : "Upper pipe should not receive any parameter";
             case LOWER:
                 return (parameter == null) ? null : "Lower pipe should not receive any parameter";
+            default:
+                return "undefined Pipe"+name;
         }
-        return null;
     }
 
     private String dateValidation() {

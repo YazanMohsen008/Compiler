@@ -179,10 +179,9 @@ exprToExecute
     | expression                                              #exp
     ;
 
-pipeNames:DATE |CURRENCY|UPPER |LOWER;
 
 pipes
-    :(PIPE pipeNames (COLON STRING_LITERAL)?)              #pipe
+    :(PIPE IDENTIFIER+ (COLON STRING_LITERAL)?)              #pipe
     ;
 pipedVariable : variable pipes*;
 

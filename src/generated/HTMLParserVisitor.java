@@ -1,5 +1,4 @@
-package generated;
-// Generated from D:/College/Compiler/compiler/src\HTMLParser.g4 by ANTLR 4.9.1
+package generated;// Generated from D:/College/Compiler/compiler/src\HTMLParser.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
@@ -463,12 +462,6 @@ public interface HTMLParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitExp(HTMLParser.ExpContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link HTMLParser#pipeNames}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPipeNames(HTMLParser.PipeNamesContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code pipe}
 	 * labeled alternative in {@link HTMLParser#pipes}.

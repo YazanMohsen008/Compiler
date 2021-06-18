@@ -1,5 +1,4 @@
-package generated;
-// Generated from D:/College/Compiler/compiler/src\HTMLParser.g4 by ANTLR 4.9.1
+package generated;// Generated from D:/College/Compiler/compiler/src\HTMLParser.g4 by ANTLR 4.9.1
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -815,18 +814,6 @@ public class HTMLParserBaseListener implements HTMLParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExp(HTMLParser.ExpContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterPipeNames(HTMLParser.PipeNamesContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitPipeNames(HTMLParser.PipeNamesContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

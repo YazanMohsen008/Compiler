@@ -1,6 +1,7 @@
-<html>
-
-    <p cp-for="x in t">
-        <a cp-model="x"></a>
+<html cp-app="x">
+    <p cp-for="x in t" >
+          <p cp-model="z">
+              <p cp-for="x in t" ></p>
+          </p>
     </p>
 </html>

@@ -1,5 +1,4 @@
-package generated;
-// Generated from D:/College/Compiler/compiler/src\HTMLParser.g4 by ANTLR 4.9.1
+package generated;// Generated from D:/College/Compiler/compiler/src\HTMLParser.g4 by ANTLR 4.9.1
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -779,16 +778,6 @@ public interface HTMLParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitExp(HTMLParser.ExpContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link HTMLParser#pipeNames}.
-	 * @param ctx the parse tree
-	 */
-	void enterPipeNames(HTMLParser.PipeNamesContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link HTMLParser#pipeNames}.
-	 * @param ctx the parse tree
-	 */
-	void exitPipeNames(HTMLParser.PipeNamesContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code pipe}
 	 * labeled alternative in {@link HTMLParser#pipes}.

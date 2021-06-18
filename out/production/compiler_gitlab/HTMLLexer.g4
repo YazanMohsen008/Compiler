@@ -130,10 +130,6 @@ TRUE                : 'true' ;
 FALSE               : 'false';
 NULL                : 'null' ;
 INDEX               : 'index' ;
-DATE                : 'date' ;
-CURRENCY            : 'currency' ;
-UPPER               : 'upper' ;
-LOWER               : 'lower' ;
 
  AND : 'AND' | 'and' | '&&' ;
  OR  : 'OR'  | 'or'  | '||' ;

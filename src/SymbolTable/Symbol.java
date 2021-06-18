@@ -16,6 +16,7 @@ public class Symbol {
     public static int FUNCTION = 0;
     public static int VARIABLE = 1;
     public static int AccessedArrayElement = 2;
+    public  boolean Iterator ;
 
     Symbol parent = null;
 
@@ -42,6 +43,12 @@ public class Symbol {
             symbolType = Symbol.AccessedArrayElement;
     }
 
+    public  void setIterator() {
+        Iterator=true;
+    }
+    public  boolean isIterator() {
+        return Iterator;
+    }
 
     public int getArgumentsCount() {
         return argumentsCount;

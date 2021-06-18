@@ -14,6 +14,13 @@ public class SwitchElement extends HTMLElement {
         super(openingTagName, closingTagName, attributes, contents);
         this.switchCaseElements = elements;
     }
+    public SwitchElement(){
+
+    }
+
+    public void setSwitchCaseElements(List<SwitchCaseElement> switchCaseElements) {
+        this.switchCaseElements = switchCaseElements;
+    }
 
     @Override
     public String toString() {

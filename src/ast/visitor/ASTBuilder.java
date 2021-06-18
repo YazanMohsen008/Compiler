@@ -17,14 +17,14 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     /**
      * htmlDocument Rule
      */
-    SymbolTable GlobalSymbolTableReference = new SymbolTable("Global");
-    SymbolTable CurrentTable = GlobalSymbolTableReference;
-    SymbolTable ParentTable = GlobalSymbolTableReference;
-    boolean ForceDeclaration = false;
-    boolean newDeclaration = false;
-    boolean fromObjectChained = false;
-
-    ArrayList<String> HTMLDocIDs = new ArrayList<>();
+   private SymbolTable GlobalSymbolTableReference = new SymbolTable("Global");
+   private SymbolTable CurrentTable = GlobalSymbolTableReference;
+   private SymbolTable ParentTable = GlobalSymbolTableReference;
+   private boolean ForceDeclaration = false;
+   private boolean newDeclaration = false;
+   private boolean fromObjectChained = false;
+   private List<String> semanticErrors =new ArrayList<>();
+   private ArrayList<String> HTMLDocIDs = new ArrayList<>();
 
     @Override
     public Object visitHtmlDocument(HTMLParser.HtmlDocumentContext ctx) {
@@ -45,10 +45,10 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
             Element element = (Element) visit(ctx.element(i));
             elements.add(element);
         }
-
+        if(semanticErrors.size()==0)
         printSymbolTableTree(GlobalSymbolTableReference);
 
-        return new HtmlDocument(scriptlets, xml, dtd, elements, HTMLDocIDs);
+        return new HtmlDocument(scriptlets, xml, dtd, elements, HTMLDocIDs,semanticErrors);
     }
 
     private void printSymbolTableTree(SymbolTable symbolTable) {
@@ -87,8 +87,8 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
 
             if (attribute.isStructural()) {
                 if (htmlElement.hasStructuralAttribute()) {
-                    // Semantic : 5. Each html element has at most one structural attribute (one statement) (if/show/hide/for/case).
-                    System.err.println("error in Line " + ctx.start.getLine() + " multiple structural attributes in Element");
+                    // Semantic 5:. Each html element has at most one structural attribute (one statement) (if/show/hide/for/case).
+                    semanticErrors.add("error in Line " + ctx.start.getLine() + " multiple structural attributes in Element");
 //                    System.exit(-1);
                 } else
                     htmlElement.setStructuralAttribute();
@@ -98,18 +98,18 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
 
         //  Semantic 3: li tag should not be outside ul/ol.
         if (htmlElement.isLi() && !(ParentElement.isUl() || ParentElement.isOl())) {
-            System.err.println("error in Line " + ctx.start.getLine() + "  The Li  Tag <li> should not be outside ul/ol. ");
+            semanticErrors.add("error in Line " + ctx.start.getLine() + "  the <li>  tag  should not be outside ul/ol. ");
 //            System.exit(-1);
         }
 
         //  Semantic 6: img tag must has src attribute.
         if (htmlElement.isImg() && !validElement) {
-            System.err.println("error in Line " + ctx.start.getLine() + " The img tag  <img> Must have src attribute ");
+            semanticErrors.add("error in Line " + ctx.start.getLine() + " The img tag  <img> Must have src attribute ");
 //            System.exit(-1);
         }
         //  Semantic 7: Anchor tag must has href attribute (anchor tag is <a>).
         if (htmlElement.isA() && !validElement) {
-            System.err.println("error in Line " + ctx.start.getLine() + " The anchor  Tag <a> Must have href attribute ");
+            semanticErrors.add("error in Line " + ctx.start.getLine() + " The anchor  Tag <a> Must have href attribute ");
 //            System.exit(-1);
         }
 
@@ -212,7 +212,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         while (temp != null) {
             //Semantic 4 : Nested cp-app is forbidden.
             if (temp.getName().equals(ctx.CP_APP().getText())) {
-                System.err.println("error in line " + ctx.start.getLine() + " Nested cp-app is forbidden");
+                semanticErrors.add("error in line " + ctx.start.getLine() + " Nested cp-app is forbidden");
 //                System.exit(-1);
             }
             temp = temp.getParent();
@@ -286,7 +286,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         if (ctx.TAG_NAME().getText().equals(HtmlDocument.ID)) {
             //  Semantic 1: Html id attribute MUST be unique on document level.
             if (HTMLDocIDs.contains(ctx.ATTVALUE_VALUE().getText())) {
-                System.err.println("error in line" + ctx.start.getLine() + " this id Value " + ctx.ATTVALUE_VALUE() + " had been used before");
+                semanticErrors.add("error in line " + ctx.start.getLine() + " this id Value " + ctx.ATTVALUE_VALUE() + " had been used before");
 //                System.exit(-1);
             } else
                 HTMLDocIDs.add(ctx.ATTVALUE_VALUE().getText());
@@ -476,7 +476,8 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
 
                     //Search for variable
                     symbol = temp.getSymbol(objectMember);
-                    if (symbol != null)
+
+                    if (symbol != null && symbol.isIterator())
                         break;
                     //Check if Variable parent is in this Scope
                     ObjectMember objectMemberParent = objectMember.getParent();
@@ -493,8 +494,10 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
                 }
                 if (temp == null) {
                     symbol = CurrentTable.insert(objectMember);
+                    symbol.setIterator();
                 } else {
-                    System.err.println("error in Line " + forErrorLine +"  " + objectMember.getName() + " iterator should not repeat");
+                    if(symbol != null && symbol.isIterator())
+                    semanticErrors.add("error in Line " + forErrorLine +"  " + objectMember.getName() + " iterator should not repeat");
 //                    System.exit(-1);
                 }
 
@@ -671,19 +674,62 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         String openingTagName = ctx.TAG_NAME(0).getText();
         String closingTagName = ctx.TAG_NAME(1).getText();
 
+        SwitchElement switchElement=new SwitchElement();
+        switchElement.setOpeningTagName(openingTagName);
+        switchElement.setClosingTagName(closingTagName);
+        boolean ScopeOpened = false;
+        boolean validElement = false;
         List<Attribute> attributes = new ArrayList<>();
-        for (HTMLParser.AttributeContext attribute : ctx.attribute())
-            attributes.add((Attribute) visit(attribute));
+
+        for (HTMLParser.AttributeContext attribute : ctx.attribute()) {
+            Attribute CurrentAttribute = (Attribute) visit(attribute);
+            ScopeOpened = ScopeOpened || CurrentAttribute.ScopeOpened();
+            if (switchElement.isA() && CurrentAttribute.isHref())
+                validElement = true;
+
+            if (switchElement.isImg() && CurrentAttribute.isSrc())
+                validElement = true;
+
+            if (CurrentAttribute.isStructural()) {
+                if (switchElement.hasStructuralAttribute()) {
+                    // Semantic 5:. Each html element has at most one structural attribute (one statement) (if/show/hide/for/case).
+                    semanticErrors.add("error in Line " + ctx.start.getLine() + " multiple structural attributes in Element");
+//                    System.exit(-1);
+                } else
+                    switchElement.setStructuralAttribute();
+            }
+
+            attributes.add(CurrentAttribute);
+        }
+        //  Semantic 3: li tag should not be outside ul/ol.
+        if (switchElement.isLi() && !(ParentElement.isUl() || ParentElement.isOl())) {
+            semanticErrors.add("error in Line " + ctx.start.getLine() + "  the <li>  tag  should not be outside ul/ol. ");
+        }
+
+        //  Semantic 6: img tag must has src attribute.
+        if (switchElement.isImg() && !validElement) {
+            semanticErrors.add("error in Line " + ctx.start.getLine() + " The img tag  <img> Must have src attribute ");
+        }
+        //  Semantic 7: Anchor tag must has href attribute (anchor tag is <a>).
+        if (switchElement.isA() && !validElement) {
+            semanticErrors.add("error in Line " + ctx.start.getLine() + " The anchor  Tag <a> Must have href attribute ");
+        }
 
         attributes.add((Attribute) visit(ctx.switchAttribute()));
 
         List<SwitchCaseElement> elements = new ArrayList<>();
         for (HTMLParser.SwitchCaseContext item : ctx.switchCase()) {
+            ParentElement=switchElement;
             elements.add((SwitchCaseElement) visit(item));
         }
-
-        return new SwitchElement(openingTagName, closingTagName,
-                attributes, null, elements);
+        //Pop the Opened Scope
+        if (CurrentTable.getParent() != null && ScopeOpened) {
+            CurrentTable = CurrentTable.getParent();
+            ParentTable = ParentTable.getParent();
+        }
+        switchElement.setClosingTagName(closingTagName);
+        switchElement.setSwitchCaseElements(elements);
+        return switchElement;
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -704,22 +750,61 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     public Object visitSwitchCase(HTMLParser.SwitchCaseContext ctx) {
         String openingTagName = ctx.TAG_NAME(0).getText();
         String closingTagName = ctx.TAG_NAME(1).getText();
+        SwitchCaseElement SwitchCaseElement=new SwitchCaseElement();
 
+        SwitchCaseElement.setOpeningTagName(openingTagName);
+        SwitchCaseElement.setClosingTagName(closingTagName);
+        SwitchCaseElement.setStructuralAttribute();
+        boolean ScopeOpened = false;
+        boolean validElement = false;
         List<Attribute> attributes = new ArrayList<>();
         for (HTMLParser.AttributeContext attribute : ctx.attribute()) {
-            Attribute attributeObject = (Attribute) visit(attribute);
-            attributes.add(attributeObject);
+            Attribute CurrentAttribute = (Attribute) visit(attribute);
+            ScopeOpened = ScopeOpened || CurrentAttribute.ScopeOpened();
+            if (SwitchCaseElement.isA() && CurrentAttribute.isHref())
+                validElement = true;
+
+            if (SwitchCaseElement.isImg() && CurrentAttribute.isSrc())
+                validElement = true;
+            if (CurrentAttribute.isStructural()) {
+                if (SwitchCaseElement.hasStructuralAttribute())
+                    // Semantic 5:. Each html element has at most one structural attribute (one statement) (if/show/hide/for/case).
+                    semanticErrors.add("error in Line " + ctx.start.getLine() + " multiple structural attributes in Element");
+//                    System.exit(-1);
+            }
+            attributes.add(CurrentAttribute);
         }
+        //  Semantic 3: li tag should not be outside ul/ol.
+        if (SwitchCaseElement.isLi() && !(ParentElement.isUl() || ParentElement.isOl())) {
+            semanticErrors.add("error in Line " + ctx.start.getLine() + "  the <li>  tag  should not be outside ul/ol. ");
+        }
+
+        //  Semantic 6: img tag must has src attribute.
+        if (SwitchCaseElement.isImg() && !validElement) {
+            semanticErrors.add("error in Line " + ctx.start.getLine() + " The img tag  <img> Must have src attribute ");
+        }
+        //  Semantic 7: Anchor tag must has href attribute (anchor tag is <a>).
+        if (SwitchCaseElement.isA() && !validElement) {
+            semanticErrors.add("error in Line " + ctx.start.getLine() + " The anchor  Tag <a> Must have href attribute ");
+        }
+
         attributes.add((Attribute) visit(ctx.switchCaseAttribute()));
+        SwitchCaseElement.setAttributes(attributes);
 
         List<Content> contents = new ArrayList<>();
-        for (int i = 0; i < ctx.content().size(); i++)
+        for (int i = 0; i < ctx.content().size(); i++) {
+            ParentElement=SwitchCaseElement;
             contents.add((Content) visit(ctx.content(i)));
-
+        }
+        //Pop the Opened Scope
+        if (CurrentTable.getParent() != null && ScopeOpened) {
+            CurrentTable = CurrentTable.getParent();
+            ParentTable = ParentTable.getParent();
+        }
         if (ParentTable.getParent() != null)
             ParentTable = ParentTable.getParent();
-        return new SwitchCaseElement(openingTagName, closingTagName,
-                attributes, contents);
+        SwitchCaseElement.setContents(contents);
+        return SwitchCaseElement;
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -825,9 +910,13 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
 
 
     @Override public Object visitPipe(HTMLParser.PipeContext ctx) {
-        if(ctx.STRING_LITERAL()==null)
-        return new Pipe(ctx.pipeNames().getText());
-        return new Pipe(ctx.pipeNames().getText(), ctx.STRING_LITERAL().toString());
+        StringBuilder PipeName= new StringBuilder();
+        for(int i= 0; i< ctx.IDENTIFIER().size();i++)
+            PipeName.append(ctx.IDENTIFIER(i).getText());
+        Pipe pipe=new Pipe(PipeName.toString());
+        if(ctx.STRING_LITERAL()!=null)
+            pipe.setParameter( ctx.STRING_LITERAL().toString());
+        return pipe;
     }
     @Override
     public Object visitPipedVariable(HTMLParser.PipedVariableContext ctx) {
@@ -839,7 +928,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
             if(errorMessage!=null)
             {
                 // Semantic : 8,9,10. pipe Validation
-                System.err.println("error in Line "+ ctx.start.getLine()+"  "+errorMessage);
+                semanticErrors.add("error in Line "+ ctx.start.getLine()+"  "+errorMessage);
 //                System.exit(-1);
             }
             pipes.add((Pipe) visit(ctx.pipes(i)));

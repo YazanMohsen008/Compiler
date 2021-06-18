@@ -6,9 +6,8 @@ import ast.nodes.contents.Content;
 import java.util.List;
 
 public class SwitchCaseElement extends HTMLElement {
-    public SwitchCaseElement(String openingTagName, String closingTagName,
-                             List<Attribute> attributes, List<Content> contents) {
-        super(openingTagName, closingTagName, attributes, contents);
+
+    public SwitchCaseElement() {
     }
 
     @Override
