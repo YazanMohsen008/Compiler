@@ -11,6 +11,8 @@ public class Attribute {
     private int AttributeIndexedName = 0;
     public static final String HREF_ATTRIBUTE = "href";
     public static final String SRC_ATTRIBUTE = "src";
+    public static final String CP_MODEL_ATTRIBUTE = "cp-model";
+    public static final String ID_ATTRIBUTE = "id";
 
     public Attribute(String name, AttributeValue value) {
         this.name = name;
@@ -53,6 +55,13 @@ public class Attribute {
     public boolean isSrc() {
         return name.equals(SRC_ATTRIBUTE);
     }
+    public boolean isCpModel() {
+        return name.equals(CP_MODEL_ATTRIBUTE);
+    }
+    public boolean isID() {
+        return name.equals(ID_ATTRIBUTE);
+    }
+
 
     public boolean isStructural() {
         return (           this.AttributeIndexedName == HTMLLexer.CP_IF
@@ -63,4 +72,9 @@ public class Attribute {
                         || this.AttributeIndexedName == HTMLLexer.CP_SWITCH_DEFAULT
         );
     }
+
+    public AttributeValue getValue() {
+        return value;
+    }
+
 }

@@ -2,26 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ea43e868-68f0-49bb-9f3c-47e3b5c21a1d" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/CodeGeneration/CodeGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/CodeGeneration/Templates.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/attributes/Attribute.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/attributes/Attribute.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/contents/PipedVariable.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/contents/PipedVariable.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/elements/HTMLElement.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/elements/HTMLElement.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/visitor/ASTBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/visitor/ASTBuilder.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/samples/samples.txt" beforeDir="false" afterPath="$PROJECT_DIR$/samples/samples.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HTMLLexer.g4" beforeDir="false" afterPath="$PROJECT_DIR$/src/HTMLLexer.g4" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HTMLParser.g4" beforeDir="false" afterPath="$PROJECT_DIR$/src/HTMLParser.g4" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SymbolTable/Symbol.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SymbolTable/Symbol.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ast/nodes/HtmlDocument.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/HtmlDocument.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ast/nodes/contents/Pipe.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/contents/Pipe.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ast/nodes/elements/SwitchCaseElement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/elements/SwitchCaseElement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ast/nodes/elements/SwitchElement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/elements/SwitchElement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/nodes/attributes/Attribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/attributes/Attribute.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/nodes/contents/PipedVariable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/contents/PipedVariable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/nodes/elements/HTMLElement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/elements/HTMLElement.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ast/visitor/ASTBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/visitor/ASTBuilder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generated/HTMLLexer.interp" beforeDir="false" afterPath="$PROJECT_DIR$/src/generated/HTMLLexer.interp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generated/HTMLLexer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/generated/HTMLLexer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generated/HTMLLexer.tokens" beforeDir="false" afterPath="$PROJECT_DIR$/src/generated/HTMLLexer.tokens" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParser.interp" beforeDir="false" afterPath="$PROJECT_DIR$/src/generated/HTMLParser.interp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/generated/HTMLParser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParser.tokens" beforeDir="false" afterPath="$PROJECT_DIR$/src/generated/HTMLParser.tokens" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParserBaseListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/generated/HTMLParserBaseListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParserBaseVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/generated/HTMLParserBaseVisitor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParserListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/generated/HTMLParserListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/generated/HTMLParserVisitor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/generated/HTMLParserVisitor.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,13 +47,16 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/CodeGeneration" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
     <property name="settings.editor.selected.configurable" value="preferences.fileTypes" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\College\Compiler\compiler\src\CodeGeneration" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\College\Compiler\compiler\samples" />
     </key>

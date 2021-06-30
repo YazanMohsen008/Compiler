@@ -1,7 +1,11 @@
-<html cp-app="x">
-    <p cp-for="x in t" >
-          <p cp-model="z">
-              <p cp-for="x in t" ></p>
-          </p>
-    </p>
+<!DOCTYPE html>
+<html cp-app="global">
+  <head>
+    <title>TEST</title>
+  </head>
+  <body>
+    <input id="myTestInput" type="text" cp-model="myTest" />
+
+    <div id="myTestDiv">My Text is: {{myTest}}</div>
+  </body>
 </html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html cp-app="global">
+  <head>
+    <title>TEST</title>
+  </head>
+  <body>
+    <input id="myTestInput" type="text" cp-model="myTest" />
+
+    <div id="myTestDiv">My Text is: {{myTest}}</div>
+  </body>
+</html>
+
+<script type="text/javascript">
+    const global ={
+    myTest:"test"
+    }
+    document.getElementById("myTestInput").addEventListener("input", (event) => {
+      global.myTest = event.target.value;
+      console.log(global);
+      });
+    //cp model template 
+    if (global.myTest) {
+      document.getElementById("myTestInput").value =
+        global.myTest;
+    }
+    document.getElementById("myTestInput").addEventListener("input", (event) => {
+      global.myTest = event.target.value;
+    });
+</script>

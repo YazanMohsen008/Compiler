@@ -1,5 +1,6 @@
 package ast.visitor;
 
+import CodeGeneration.CodeGenerator;
 import SymbolTable.*;
 import ast.nodes.*;
 import ast.nodes.arithmetic_expressions.*;
@@ -10,26 +11,30 @@ import ast.nodes.elements.*;
 import ast.nodes.expressions.*;
 import generated.*;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     /**
      * htmlDocument Rule
      */
-   private SymbolTable GlobalSymbolTableReference = new SymbolTable("Global");
-   private SymbolTable CurrentTable = GlobalSymbolTableReference;
-   private SymbolTable ParentTable = GlobalSymbolTableReference;
-   private boolean ForceDeclaration = false;
-   private boolean newDeclaration = false;
-   private boolean fromObjectChained = false;
-   private List<String> semanticErrors =new ArrayList<>();
-   private ArrayList<String> HTMLDocIDs = new ArrayList<>();
-
+    private SymbolTable GlobalSymbolTableReference = new SymbolTable("Global");
+    private SymbolTable CurrentTable = GlobalSymbolTableReference;
+    private SymbolTable ParentTable = GlobalSymbolTableReference;
+    private boolean ForceDeclaration = false;
+    private boolean newDeclaration = false;
+    private boolean fromObjectChained = false;
+    private List<String> semanticErrors = new ArrayList<>();
+    private ArrayList<String> HTMLDocIDs = new ArrayList<>();
+    CodeGenerator codeGenerator;
     @Override
     public Object visitHtmlDocument(HTMLParser.HtmlDocumentContext ctx) {
         XML xml = null;
         DTD dtd = null;
+        codeGenerator = new CodeGenerator();
+
         if (ctx.XML() != null)
             xml = new XML(ctx.XML().getText());
 
@@ -45,11 +50,13 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
             Element element = (Element) visit(ctx.element(i));
             elements.add(element);
         }
-        if(semanticErrors.size()==0)
-        printSymbolTableTree(GlobalSymbolTableReference);
+        if (semanticErrors.size() == 0)
+            printSymbolTableTree(GlobalSymbolTableReference);
 
-        return new HtmlDocument(scriptlets, xml, dtd, elements, HTMLDocIDs,semanticErrors);
+        codeGenerator.saveGeneratedCode("samples//samples.txt");
+        return new HtmlDocument(scriptlets, xml, dtd, elements, HTMLDocIDs, semanticErrors);
     }
+
 
     private void printSymbolTableTree(SymbolTable symbolTable) {
         symbolTable.print();
@@ -74,6 +81,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         boolean ScopeOpened = false;
         boolean validElement = false;
         List<Attribute> attributes = new ArrayList<>();
+
         for (int i = 0; i < ctx.attribute().size(); i++) {
             Attribute attribute = (Attribute) visit(ctx.attribute(i));
             //Check if This attribute had opened New Scope ... the OR is to make Sure that if Scope Opened not to make it false
@@ -93,8 +101,15 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
                 } else
                     htmlElement.setStructuralAttribute();
             }
+
+            if (attribute.isCpModel()) {
+                if (!htmlElement.isInput()) {
+                    semanticErrors.add("error in Line " + ctx.start.getLine() + " cp-model should be only in input tag");
+                }
+            }
             attributes.add(attribute);
         }
+
 
         //  Semantic 3: li tag should not be outside ul/ol.
         if (htmlElement.isLi() && !(ParentElement.isUl() || ParentElement.isOl())) {
@@ -114,13 +129,18 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         }
 
         htmlElement.setAttributes(attributes);
-
+        for (Attribute attribute : attributes) {
+            if (attribute.isCpModel()) {
+                codeGenerator.cpModelBinder(htmlElement.getID(), attribute.getValue().toString());
+            }
+        }
         List<Content> contents = null;
         // If It's An Empty Element, Then It Has No Content.
         String closingTagName = null;
         if (ctx.TAG_NAME(1) != null) {
             closingTagName = ctx.TAG_NAME(1).getText();
             contents = new ArrayList<>();
+
             //TO Get its Children
             for (int i = 0; i < ctx.content().size(); i++) {
                 ParentElement = htmlElement;
@@ -219,6 +239,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         }
         SymbolTable symbolTable = openScope(ctx.CP_APP().getText());
         identifier.setSymbol(getObjectMemberSymbol(identifier));
+        codeGenerator.setCpAppVariable(identifier.getName());
         return new Attribute(ctx.CP_APP().getText(), identifier, symbolTable, HTMLLexer.CP_APP);
     }
 
@@ -496,8 +517,8 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
                     symbol = CurrentTable.insert(objectMember);
                     symbol.setIterator();
                 } else {
-                    if(symbol != null && symbol.isIterator())
-                    semanticErrors.add("error in Line " + forErrorLine +"  " + objectMember.getName() + " iterator should not repeat");
+                    if (symbol != null && symbol.isIterator())
+                        semanticErrors.add("error in Line " + forErrorLine + "  " + objectMember.getName() + " iterator should not repeat");
 //                    System.exit(-1);
                 }
 
@@ -674,7 +695,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         String openingTagName = ctx.TAG_NAME(0).getText();
         String closingTagName = ctx.TAG_NAME(1).getText();
 
-        SwitchElement switchElement=new SwitchElement();
+        SwitchElement switchElement = new SwitchElement();
         switchElement.setOpeningTagName(openingTagName);
         switchElement.setClosingTagName(closingTagName);
         boolean ScopeOpened = false;
@@ -719,7 +740,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
 
         List<SwitchCaseElement> elements = new ArrayList<>();
         for (HTMLParser.SwitchCaseContext item : ctx.switchCase()) {
-            ParentElement=switchElement;
+            ParentElement = switchElement;
             elements.add((SwitchCaseElement) visit(item));
         }
         //Pop the Opened Scope
@@ -750,7 +771,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     public Object visitSwitchCase(HTMLParser.SwitchCaseContext ctx) {
         String openingTagName = ctx.TAG_NAME(0).getText();
         String closingTagName = ctx.TAG_NAME(1).getText();
-        SwitchCaseElement SwitchCaseElement=new SwitchCaseElement();
+        SwitchCaseElement SwitchCaseElement = new SwitchCaseElement();
 
         SwitchCaseElement.setOpeningTagName(openingTagName);
         SwitchCaseElement.setClosingTagName(closingTagName);
@@ -793,7 +814,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
 
         List<Content> contents = new ArrayList<>();
         for (int i = 0; i < ctx.content().size(); i++) {
-            ParentElement=SwitchCaseElement;
+            ParentElement = SwitchCaseElement;
             contents.add((Content) visit(ctx.content(i)));
         }
         //Pop the Opened Scope
@@ -841,6 +862,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     public Object visitCurlyContent(HTMLParser.CurlyContentContext ctx) {
         newDeclaration = false;
         ForceDeclaration = false;
+
         return visit(ctx.curly());
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -860,6 +882,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
 
     @Override
     public Object visitCurlyVariables(HTMLParser.CurlyVariablesContext ctx) {
+
         return visit(ctx.pipedVariable());
     }
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -907,33 +930,44 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     }
 
 
-
-
-    @Override public Object visitPipe(HTMLParser.PipeContext ctx) {
-        StringBuilder PipeName= new StringBuilder();
-        for(int i= 0; i< ctx.IDENTIFIER().size();i++)
+    @Override
+    public Object visitPipe(HTMLParser.PipeContext ctx) {
+        StringBuilder PipeName = new StringBuilder();
+        for (int i = 0; i < ctx.IDENTIFIER().size(); i++)
             PipeName.append(ctx.IDENTIFIER(i).getText());
-        Pipe pipe=new Pipe(PipeName.toString());
-        if(ctx.STRING_LITERAL()!=null)
-            pipe.setParameter( ctx.STRING_LITERAL().toString());
+        Pipe pipe = new Pipe(PipeName.toString());
+        if (ctx.STRING_LITERAL() != null)
+            pipe.setParameter(ctx.STRING_LITERAL().toString());
         return pipe;
     }
+
     @Override
     public Object visitPipedVariable(HTMLParser.PipedVariableContext ctx) {
-        Variable variable=(Variable) visit(ctx.variable());
+        Variable variable = (Variable) visit(ctx.variable());
         List<Pipe> pipes = new ArrayList<>();
         for (int i = 0; i < ctx.pipes().size(); i++) {
-            Pipe pipe=(Pipe) visit(ctx.pipes(i));
-            String errorMessage=pipe.validatePipe();
-            if(errorMessage!=null)
-            {
+            Pipe pipe = (Pipe) visit(ctx.pipes(i));
+            String errorMessage = pipe.validatePipe();
+            if (errorMessage != null) {
                 // Semantic : 8,9,10. pipe Validation
-                semanticErrors.add("error in Line "+ ctx.start.getLine()+"  "+errorMessage);
+                semanticErrors.add("error in Line " + ctx.start.getLine() + "  " + errorMessage);
 //                System.exit(-1);
             }
             pipes.add((Pipe) visit(ctx.pipes(i)));
         }
-        return new PipedVariable(variable,pipes);
+        PipedVariable pipedVariable = new PipedVariable(variable, pipes);
+        String renderScript =
+                "\n<script type=\"text/javascript\">" +
+                        "  function render() {\n" +
+                        "    setInterval(() => {\n" +//TODO Send pipes as Parameters or in PipedVariable String ?
+                        "      replaceCurlyBraces(" + ParentElement.getID() + ", \"" + pipedVariable.getVariable() + "\");\n" +
+                        "    }, 1000);\n" +
+                        "  }\n" +
+                        "  render();" +
+                        "  </script>\n";
+//            GeneratedCode += renderScript;
+
+        return pipedVariable;
     }
 
 

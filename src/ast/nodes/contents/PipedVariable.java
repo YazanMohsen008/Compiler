@@ -30,4 +30,8 @@ public class PipedVariable implements Content {
             textRepresentation += indent + pipe + "\n";
         return textRepresentation;
     }
+
+    public Variable getVariable() {
+        return variable;
+    }
 }

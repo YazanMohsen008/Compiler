@@ -4,22 +4,25 @@ import SymbolTable.SymbolTable;
 import ast.nodes.PrintUtil;
 import ast.nodes.attributes.Attribute;
 import ast.nodes.contents.Content;
+
+import java.util.Arrays;
 import java.util.List;
 
 public class HTMLElement implements Element {
     private String openingTagName;
     private String closingTagName;
-    private List<Attribute> attributes;
+    private List<Attribute> attributes=null;
     private List<Content> contents;
     private SymbolTable symbolTable;
 
     private boolean structuralAttribute;
 
-    public  static final String A_ELEMENT="a";
-    public  static final String IMG_ELEMENT="img";
-    public  static final String LI_ELEMENT="li";
-    public  static final String UL_ELEMENT="ul";
-    public  static final String OL_ELEMENT="ol";
+    public static final String A_ELEMENT = "a";
+    public static final String IMG_ELEMENT = "img";
+    public static final String LI_ELEMENT = "li";
+    public static final String UL_ELEMENT = "ul";
+    public static final String OL_ELEMENT = "ol";
+    public static final String INPUT_ELEMENT = "input";
 
 
     public HTMLElement() {
@@ -73,15 +76,24 @@ public class HTMLElement implements Element {
         this.symbolTable = symbolTable;
     }
 
+
+    public String getID() {
+        for (Attribute attribute:attributes) {
+            if(attribute.isID())
+                return attribute.getValue().toString();
+        }//TODO Generate unique ID
+        return "Generated ID";
+    }
+
     @Override
     public String toString() {
         String textRepresentation = "";
         textRepresentation += "Opening Tag Name: " + this.openingTagName + "\n";
         textRepresentation += "Closing Tag Name: " + this.closingTagName + "\n";
         textRepresentation += "Attributes:\n";
-        for(Attribute attribute: this.attributes)
+        for (Attribute attribute : this.attributes)
             textRepresentation += attribute + "\n";
-        if(this.contents != null) {
+        if (this.contents != null) {
             for (Content content : this.contents)
                 textRepresentation += "Content:\n" + content + "\n";
         }
@@ -92,28 +104,28 @@ public class HTMLElement implements Element {
         String textRepresentation = "";
         String indent = PrintUtil.getIndent(col);
         textRepresentation += indent + "Opening Tag Name: " + this.openingTagName + "\n";
-        if(this.attributes != null && this.attributes.size() != 0) {
+        if (this.attributes != null && this.attributes.size() != 0) {
             textRepresentation += indent + "Attributes:\n";
-            for(Attribute attribute : this.attributes)
+            for (Attribute attribute : this.attributes)
                 textRepresentation += indent + attribute + "\n";
         }
-        if(this.contents != null && this.contents.size() != 0) {
-            for(Content content : this.contents)
+        if (this.contents != null && this.contents.size() != 0) {
+            for (Content content : this.contents)
                 textRepresentation += indent + "Content:\n"
-                            + content.toString(col + 1) + "\n";
+                        + content.toString(col + 1) + "\n";
         }
-        if(this.closingTagName != null)
+        if (this.closingTagName != null)
             textRepresentation += indent + "Closing Tag Name: " + this.closingTagName + "\n";
         textRepresentation += indent + "-----------------------\n";
         return textRepresentation;
     }
 
     public boolean isA() {
-        return  openingTagName.equals(A_ELEMENT);
+        return openingTagName.equals(A_ELEMENT);
     }
 
     public boolean isImg() {
-        return  openingTagName.equals(IMG_ELEMENT);
+        return openingTagName.equals(IMG_ELEMENT);
     }
 
     public boolean hasStructuralAttribute() {
@@ -121,16 +133,23 @@ public class HTMLElement implements Element {
     }
 
     public void setStructuralAttribute() {
-        structuralAttribute=true;
+        structuralAttribute = true;
     }
 
     public boolean isLi() {
-        return  openingTagName.equals(LI_ELEMENT);}
+        return openingTagName.equals(LI_ELEMENT);
+    }
 
     public boolean isUl() {
-        return  openingTagName.equals(UL_ELEMENT);
+        return openingTagName.equals(UL_ELEMENT);
     }
+
     public boolean isOl() {
-        return  openingTagName.equals(OL_ELEMENT);
+        return openingTagName.equals(OL_ELEMENT);
     }
+
+    public boolean isInput() {
+        return openingTagName.equals(INPUT_ELEMENT);
+    }
+
 }
