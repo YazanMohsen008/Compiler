@@ -5,38 +5,37 @@ options { tokenVocab=HTMLLexer; }
 htmlDocument : SCRIPTLET* XML? SCRIPTLET* DTD? SCRIPTLET* element* ;
 
 element
-    :  TAG_OPEN TAG_NAME attribute*
-       (TAG_CLOSE (content* TAG_OPEN TAG_SLASH TAG_NAME TAG_CLOSE)? | TAG_SLASH_CLOSE)   #htmlElement
-    | switchE                                                                            #switchElement
-    | SCRIPTLET                                                                          #scriptletElement
-    | SCRIPT_OPEN (SCRIPT_BODY | SCRIPT_SHORT_BODY)                                      #scriptElement
-    | STYLE_OPEN (STYLE_BODY | STYLE_SHORT_BODY)                                         #styleElement
+    :  (SEA_WS)*TAG_OPEN  TAG_NAME (TAG_WS)* attribute*
+      (TAG_CLOSE (SEA_WS)*(content* (SEA_WS)* TAG_OPEN TAG_SLASH TAG_NAME TAG_CLOSE (SEA_WS)*)? | TAG_SLASH_CLOSE(SEA_WS)*)   #htmlElement
+    | (SEA_WS)* switchE                                                                            #switchElement
+    | (SEA_WS)* SCRIPTLET   (SEA_WS)*                                                                        #scriptletElement
+    | (SEA_WS)* SCRIPT_OPEN (SCRIPT_BODY | SCRIPT_SHORT_BODY)                                      #scriptElement
+    | (SEA_WS)* STYLE_OPEN (STYLE_BODY | STYLE_SHORT_BODY)                                         #styleElement
     ;
 
 attribute
     :
-      CP_INCLUDE    ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   objectChainedMembers   DQ   #cp_includeAttribute
-    | CP_PARAMETERS ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   objectChainedMembers   DQ   #cp_parametersAttribute
-    | CHANGE        ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   objectChainedMembers   DQ   #changeAttribute
-    | FOCUS         ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   objectChainedMembers   DQ   #focusAttribute
-
-    | CP_APP        ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   IDENTIFIER             DQ   #cp_appAttribute
-    | CP_SHOW       ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   booleanExpression      DQ   #cp_showAttribute
-    | CP_HIDE       ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   booleanExpression      DQ   #cp_hideAttribute
-    | CP_IF         ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   booleanExpression      DQ   #cp_ifAttribute
-    | CP_FOR        ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   forLoop                DQ   #cp_forAttribute
-    | CP_MODEL      ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   numericValue           DQ   #cp_modelAttribute
-    | CLICK         ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   objectChainedMembers   DQ   #clickAttribute
-    | MOUSEOVER     ATTRIBUTE_EQUALS   DOUBLE_QUOTE_OPEN   objectChainedMembers   DQ   #mouseoverAttribute
-    | TAG_NAME     (TAG_EQUALS        ATTVALUE_VALUE)?                                 #non_cpAttribute
+      CP_INCLUDE    (CP_MIDDLE_WS)* ATTRIBUTE_EQUALS (CP_MIDDLE_WS)* DOUBLE_QUOTE_OPEN  (CP_WS)* objectChainedMembers   DQ(TAG_WS)*   #cp_includeAttribute
+    | CP_PARAMETERS (CP_MIDDLE_WS)* ATTRIBUTE_EQUALS (CP_MIDDLE_WS)* DOUBLE_QUOTE_OPEN  (CP_WS)* objectChainedMembers   DQ (TAG_WS)* #cp_parametersAttribute
+    | CHANGE        (CP_MIDDLE_WS)* ATTRIBUTE_EQUALS (CP_MIDDLE_WS)* DOUBLE_QUOTE_OPEN  (CP_WS)* objectChainedMembers   DQ (TAG_WS)* #changeAttribute
+    | FOCUS         (CP_MIDDLE_WS)* ATTRIBUTE_EQUALS (CP_MIDDLE_WS)* DOUBLE_QUOTE_OPEN  (CP_WS)* objectChainedMembers   DQ (TAG_WS)* #focusAttribute
+    | CP_APP        (CP_MIDDLE_WS)* ATTRIBUTE_EQUALS (CP_MIDDLE_WS)* DOUBLE_QUOTE_OPEN  (CP_WS)* IDENTIFIER             DQ (TAG_WS)* #cp_appAttribute
+    | CP_SHOW       (CP_MIDDLE_WS)* ATTRIBUTE_EQUALS (CP_MIDDLE_WS)* DOUBLE_QUOTE_OPEN  (CP_WS)* booleanExpression      DQ (TAG_WS)* #cp_showAttribute
+    | CP_HIDE       (CP_MIDDLE_WS)* ATTRIBUTE_EQUALS (CP_MIDDLE_WS)* DOUBLE_QUOTE_OPEN  (CP_WS)* booleanExpression      DQ (TAG_WS)* #cp_hideAttribute
+    | CP_IF         (CP_MIDDLE_WS)* ATTRIBUTE_EQUALS (CP_MIDDLE_WS)* DOUBLE_QUOTE_OPEN  (CP_WS)* booleanExpression      DQ (TAG_WS)* #cp_ifAttribute
+    | CP_FOR        (CP_MIDDLE_WS)* ATTRIBUTE_EQUALS (CP_MIDDLE_WS)* DOUBLE_QUOTE_OPEN  (CP_WS)* forLoop                DQ (TAG_WS)* #cp_forAttribute
+    | CP_MODEL      (CP_MIDDLE_WS)* ATTRIBUTE_EQUALS (CP_MIDDLE_WS)* DOUBLE_QUOTE_OPEN  (CP_WS)* numericValue           DQ (TAG_WS)* #cp_modelAttribute
+    | CLICK         (CP_MIDDLE_WS)* ATTRIBUTE_EQUALS (CP_MIDDLE_WS)* DOUBLE_QUOTE_OPEN  (CP_WS)* objectChainedMembers   DQ (TAG_WS)* #clickAttribute
+    | MOUSEOVER     (CP_MIDDLE_WS)* ATTRIBUTE_EQUALS (CP_MIDDLE_WS)* DOUBLE_QUOTE_OPEN  (CP_WS)* objectChainedMembers   DQ (TAG_WS)* #mouseoverAttribute
+    | TAG_NAME     ((TAG_WS)* TAG_EQUALS (TAG_WS)*ATTVALUE_VALUE)? (TAG_WS)*                                 #non_cpAttribute
     ;
 
 booleanExpression
-    : booleanValue                                                                 #primitiveBooleanExpression
-    | comparisonExpression                                                         #binaryComparisonExpression
-    | booleanExpression (booleanOperator | equalityOperator) booleanExpression     #binaryBooleanExpression
-    | NOT booleanExpression                                                        #unaryBooleanExpression
-    | OPENING_PARENTHESES booleanExpression CLOSING_PARENTHESES                    #parenthesizedBooleanExpression
+    : (CP_WS)* booleanValue (CP_WS)*                                                                  #primitiveBooleanExpression
+    | (CP_WS)* comparisonExpression  (CP_WS)*                                                         #binaryComparisonExpression
+    | booleanExpression  (CP_WS)* (booleanOperator | equalityOperator) booleanExpression (CP_WS)*      #binaryBooleanExpression
+    | (CP_WS)* NOT booleanExpression                                                        #unaryBooleanExpression
+    |  (CP_WS)* OPENING_PARENTHESES  (CP_WS)* booleanExpression  (CP_WS)* CLOSING_PARENTHESES (CP_WS)*                     #parenthesizedBooleanExpression
     ;
 
 booleanOperator
@@ -62,7 +61,7 @@ booleanValue
 // This Rule Is A Special Case Of A Boolean Expression
 // As It Boils Down To A Boolean Value But Its Operands Must Be Arithmetic (A Number Eventually)
 comparisonExpression
-    : arithmeticExpression (comparisonOperator | equalityOperator) arithmeticExpression
+    : arithmeticExpression (CP_WS)*(comparisonOperator | equalityOperator) (CP_WS)*arithmeticExpression
     ;
 
 comparisonOperator
@@ -74,9 +73,9 @@ comparisonOperator
 
 arithmeticExpression
     : numericValue                                                    #primitiveArithmeticExpression
-    | arithmeticExpression arithmeticOperator arithmeticExpression    #binaryArithmeticExpression
+    | arithmeticExpression (CP_WS)* arithmeticOperator (CP_WS)*arithmeticExpression    #binaryArithmeticExpression
     | (PLUS | MINUS) arithmeticExpression                             #unaryArithmeticExpression
-    | OPENING_PARENTHESES arithmeticExpression CLOSING_PARENTHESES    #parenthesizedArithmeticExpression
+    | OPENING_PARENTHESES (CP_WS)*arithmeticExpression (CP_WS)*CLOSING_PARENTHESES    #parenthesizedArithmeticExpression
     ;
 
 arithmeticOperator
@@ -94,7 +93,7 @@ numericValue
     | objectChainedMembers   #numericObjectAccessedMember
     ;
 
-objectChainedMembers : objectMember (DOT objectMember)* ;
+objectChainedMembers :(CP_WS)*objectMember (DOT objectMember)*(CP_WS)* ;
 
 // IDENTIFIER, accessedArrayElement & functionCall Are Grouped In This Rule
 // Because They're The Only Kind Of Expressions That Can
@@ -106,13 +105,13 @@ objectMember
     | functionCall           #functionProvoke
     ;
 
-accessedArrayElement : IDENTIFIER OPENING_BRACKET arithmeticExpression CLOSING_BRACKET ;
+accessedArrayElement : IDENTIFIER (CP_WS)*OPENING_BRACKET(CP_WS)* arithmeticExpression (CP_WS)*CLOSING_BRACKET ;
 
-functionCall : IDENTIFIER OPENING_PARENTHESES functionArguments? CLOSING_PARENTHESES ;
+functionCall : IDENTIFIER (CP_WS)*OPENING_PARENTHESES (CP_WS)*functionArguments? (CP_WS)*CLOSING_PARENTHESES (CP_WS)*;
 
 // The Function Argument Can Be Any Type Of Expression,
 // Boolean Or Arithmetic, Simple Or Complex.
-functionArguments : expression (COMMA expression)* ;
+functionArguments : expression(CP_WS)* (COMMA expression)* ;
 
 expression
     : STRING_LITERAL         #stringLiteral
@@ -121,13 +120,13 @@ expression
     ;
 
 forLoop
-    : IDENTIFIER IN (array | objectChainedMembers) (SEMICOLON IDENTIFIER ASSIGNMENT INDEX)?   #forLoop1
-    | IDENTIFIER COMMA IDENTIFIER IN objectChainedMembers                                     #forLoop2
+    : (CP_WS)*IDENTIFIER (CP_WS)+ IN (CP_WS)+(array | objectChainedMembers)(CP_WS)* (SEMICOLON (CP_WS)*IDENTIFIER (CP_WS)*ASSIGNMENT (CP_WS)*INDEX)?   #forLoop1
+    | (CP_WS)*IDENTIFIER (CP_WS)*COMMA (CP_WS)*IDENTIFIER (CP_WS)+ IN (CP_WS)+objectChainedMembers                                     #forLoop2
     ;
 
-array : OPENING_BRACKET
-        (arrayElement (COMMA arrayElement)*)?
-        CLOSING_BRACKET
+array : OPENING_BRACKET(CP_WS)*
+        (arrayElement ((CP_WS)*COMMA (CP_WS)*arrayElement)*)?(CP_WS)*
+        CLOSING_BRACKET(CP_WS)*
       ;
 
 arrayElement
@@ -137,21 +136,21 @@ arrayElement
 
 // Do Not Erase The 'E', switch is like a keyword to ANTLR, so things are getting mixed up ..
 switchE
-    : TAG_OPEN TAG_NAME attribute* switchAttribute attribute* TAG_CLOSE
-      (switchCase)*
-      TAG_OPEN TAG_SLASH TAG_NAME TAG_CLOSE
+    : TAG_OPEN TAG_NAME (TAG_WS)*attribute* switchAttribute attribute* (TAG_WS)*TAG_CLOSE(SEA_WS)*
+      (switchCase)*(SEA_WS)*
+      TAG_OPEN TAG_SLASH TAG_NAME TAG_CLOSE(SEA_WS)*
     ;
 
 switchAttribute : CP_SWITCH ATTRIBUTE_EQUALS DOUBLE_QUOTE_OPEN expression DQ ;
 
 switchCase
-    : TAG_OPEN TAG_NAME attribute* switchCaseAttribute attribute* TAG_CLOSE
-      (content*)
-      TAG_OPEN TAG_SLASH TAG_NAME TAG_CLOSE
+    : TAG_OPEN TAG_NAME(TAG_WS)* attribute* switchCaseAttribute attribute* (TAG_WS)*TAG_CLOSE(SEA_WS)*
+      (content*)(SEA_WS)*
+      TAG_OPEN TAG_SLASH TAG_NAME TAG_CLOSE(SEA_WS)*
     ;
 
 switchCaseAttribute
-    : CP_SWITCH_CASE ATTRIBUTE_EQUALS DOUBLE_QUOTE_OPEN expression DQ
+    : CP_SWITCH_CASE (CP_MIDDLE_WS)*ATTRIBUTE_EQUALS(CP_MIDDLE_WS)* DOUBLE_QUOTE_OPEN expression DQ
     | CP_SWITCH_DEFAULT
     ;
 
@@ -161,27 +160,27 @@ content
     | curly     #curlyContent
     ;
 
-text : (HTML_TEXT | CURLY_OPEN)+ ;
+text : ((SEA_WS)* HTML_TEXT (SEA_WS)* | (SEA_WS)*CURLY_OPEN (SEA_WS)*)+ ;
 
 curly
-    : DOUBLE_CURLY_OPEN pipedVariable DOUBLE_CURLY_CLOSE         #curlyVariables
-    | DOUBLE_CURLY_OPEN exprToExecute DOUBLE_CURLY_CLOSE         #curlyExpression
+    : DOUBLE_CURLY_OPEN (CP_WS)* pipedVariable (CP_WS)* DOUBLE_CURLY_CLOSE(SEA_WS)*       #curlyVariables
+    | DOUBLE_CURLY_OPEN (CP_WS)* exprToExecute (CP_WS)* DOUBLE_CURLY_CLOSE(SEA_WS)*       #curlyExpression
     ;
 
 ternaryOperator
-    : booleanExpression QUESTION_MARK exprToExecute COLON exprToExecute   #basicTernaryOperator
-    | OPENING_PARENTHESES ternaryOperator CLOSING_PARENTHESES             #parenthesizedTernaryOperator
+    : booleanExpression (CP_WS)*QUESTION_MARK(CP_WS)* exprToExecute (CP_WS)*COLON(CP_WS)* exprToExecute   #basicTernaryOperator
+    | (CP_WS)*OPENING_PARENTHESES (CP_WS)* ternaryOperator (CP_WS)*CLOSING_PARENTHESES (CP_WS)*            #parenthesizedTernaryOperator
     ;
 
 exprToExecute
     : ternaryOperator                                         #ternaryExprToExecute
-    | OPENING_PARENTHESES exprToExecute CLOSING_PARENTHESES   #parenthesizedExprToExecute
+    | OPENING_PARENTHESES (CP_WS)*exprToExecute (CP_WS)*CLOSING_PARENTHESES   #parenthesizedExprToExecute
     | expression                                              #exp
     ;
 
 
 pipes
-    :(PIPE IDENTIFIER+ (COLON STRING_LITERAL)?)              #pipe
+    :(PIPE (CP_WS)*IDENTIFIER+ (CP_WS)*(COLON (CP_WS)*STRING_LITERAL)?)              #pipe
     ;
 pipedVariable : variable pipes*;
 

@@ -11,10 +11,8 @@ import ast.nodes.elements.*;
 import ast.nodes.expressions.*;
 import generated.*;
 
-import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     /**
@@ -69,6 +67,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
 
     HTMLElement ParentElement;
     String defaultText;
+
     /**
      * element Rule
      */
@@ -132,12 +131,14 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
 
         for (Attribute attribute : attributes) {
             if (attribute.isCpModel()) {
-                codeGenerator.cpModelBinder(htmlElement.getID(), attribute.getValue().toString());
+                    codeGenerator.cpModelBinder(htmlElement.getID(), attribute.getValue().toString());
             }
             if (attribute.isEvent()) {
                 codeGenerator.eventGenerator(htmlElement.getID(),attribute.getName().substring(1),(FunctionCall) attribute.getValue());
             }
-
+            if (attribute.isCpFor()) {
+                codeGenerator.cpForGenerator(htmlElement,attribute);
+            }
         }
         List<Content> contents = null;
         // If It's An Empty Element, Then It Has No Content.
@@ -173,6 +174,10 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         }
         htmlElement.setClosingTagName(closingTagName);
         htmlElement.setContents(contents);
+
+            if (htmlElement.haveFor()) {
+                codeGenerator.cpForGeneratorClose(htmlElement.getID());
+        }
         return htmlElement;
 
     }
@@ -661,6 +666,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
             value.setSymbol(getObjectMemberSymbol(index));
         }
         return new ForLoop(value, object, index);
+
     }
 
     @Override

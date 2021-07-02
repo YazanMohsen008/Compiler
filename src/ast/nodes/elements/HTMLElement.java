@@ -82,6 +82,13 @@ public class HTMLElement implements Element {
         }//TODO Generate unique ID
         return "Generated ID";
     }
+ public boolean haveFor() {
+        for (Attribute attribute:attributes) {
+            if(attribute.isCpFor())
+                return true;
+        }
+        return false;
+    }
 
     @Override
     public String toString() {

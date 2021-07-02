@@ -12,7 +12,7 @@ DTD : '<!' .*? '>' ;
 
 SCRIPTLET : '<?' .*? '?>' | '<%' .*? '%>';
 
-SEA_WS : [ \t\r\n] -> skip ;
+SEA_WS : [ \t\r\n]  ;
 
 CURLY_OPEN : '{' ;
 
@@ -74,7 +74,7 @@ TAG_NAME : TAG_FIRST_CHAR TAG_CHAR* ;
 
 TAG_EQUALS : '=' -> pushMode(ATTVALUE) ;
 
-TAG_WS : [ \t\r\n] -> skip ;
+TAG_WS : [ \t\r\n]  ;
 
 TAG_SLASH : '/' ;
 
@@ -109,7 +109,7 @@ fragment TAG_FIRST_CHAR
 mode CP_MIDDLE ;
 
 ATTRIBUTE_EQUALS     : '=' ;
-CP_MIDDLE_WS         : [ \t\r\n] -> skip ;
+CP_MIDDLE_WS         : [ \t\r\n];
 DOUBLE_QUOTE_OPEN    : '"' -> pushMode(CP_MODE) ;
 
 mode CP_MODE ;
@@ -151,7 +151,7 @@ INDEX               : 'index' ;
 
 IDENTIFIER : ID_FIRST_CHAR ID_CHAR* ;
 
-CP_WS : [ \t\r\n] -> skip ;
+CP_WS : [ \t\r\n]  ;
 
 NUMBER : DIGIT+ (DOT DIGIT+)? ;
 

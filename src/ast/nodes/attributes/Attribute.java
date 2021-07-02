@@ -18,6 +18,7 @@ public class Attribute {
     public static final String FOCUS_ATTRIBUTE = "@focus";
     public static final String CHANGE_ATTRIBUTE = "@change";
     public static final String CP_SWITCH_ATTRIBUTE = "cp-switch";
+    public static final String CP_FOR_ATTRIBUTE = "cp-for";
 
     public Attribute(String name, AttributeValue value) {
         this.name = name;
@@ -66,6 +67,9 @@ public class Attribute {
 
     public boolean isCpModel() {
         return name.equals(CP_MODEL_ATTRIBUTE);
+    }
+    public boolean isCpFor() {
+        return name.equals(CP_FOR_ATTRIBUTE);
     }
 
     public boolean isID() {

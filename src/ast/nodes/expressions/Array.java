@@ -11,9 +11,12 @@ public class Array implements Expression {
 
     @Override
     public String toString () {
-        String textRepresentation = "Array[";
-        for(Expression element: this.elements)
-            textRepresentation += element.toString() + ", ";
+        String textRepresentation = "[";
+        for (int i = 0; i < this.elements.size(); i++) {
+            textRepresentation += elements.get(i).toString();
+            if(i!=elements.size()-1)
+            textRepresentation += ", ";
+        }
         return textRepresentation + "]";
     }
 

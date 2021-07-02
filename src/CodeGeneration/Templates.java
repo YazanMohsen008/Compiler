@@ -91,13 +91,41 @@ public class Templates {
                         + "  renders.push(switchFunc_{--elementID--});\n\n";
 
         public static String RENDER_FUNCTION = "  function render() {\n" + "    setInterval(() => {\n"
+                        +"    for(let i = 0; i < new_elements.length; i++) {\n" +
+                        "          new_elements[i].remove();\n" +
+                        "      }\n"
                         + "      for(let i = 0; i < changes.length; i++) {\n" + "          changes[i]();\n"
                         + "      }\n" + "      changes = [];\n" + "      for (let i = 0; i < renders.length; i++) {\n"
                         + "         renders[i]();\n" + "      }\n" + "    }, 1000);\n" + "  }\n" + "  render();\n\n";
 
 
+         public static String FOR_TEMPLATE_OPENING =
+                 " var cpFor_{--elementID--} = function (event) {\n" +
+                 "        let originalElement = document.getElementById(\"{--elementID--}\");\n" +
+                 "        let container = originalElement.parentElement;\n" +
+                 "\n" +
+                 "        for (var z in {--ArrayName--}) {\n" +
+                 "          let elem = originalElement.cloneNode(true);\n" +
+                 "          {--index--}\n" +
+                 "          {--Value--}\n" +
+                 "          {--Key--}\n" +
+                 "          elem.id = \"{--elementID--}\" + z;\n" +
+                 "\n" ;
 
-        // built in function
+
+        public static String FOR_TEMPLATE_CLOSING =
+                "\n" +
+                 "          elem.hidden = false;\n" +
+                 "          container.appendChild(elem);\n" +
+                 "          new_elements.push(elem);\n" +
+                 "        }\n" +
+                 "        originalElement.hidden = true;\n" +
+                 "      };\n" +
+                 "      renders.push(cpFor_{--elementID--});\n" +
+                 "\n" +
+                 "\n";
+
+// built in function
 
         // to lower
         public static String LOWER_FUNCTION = 

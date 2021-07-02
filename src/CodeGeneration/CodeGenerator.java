@@ -1,11 +1,12 @@
 package CodeGeneration;
 
 import CodeGeneration.Templates;
+import ast.nodes.attributes.Attribute;
 import ast.nodes.boolean_expressions.UnaryBooleanExpression;
-import ast.nodes.expressions.AccessedArrayElement;
-import ast.nodes.expressions.Expression;
-import ast.nodes.expressions.FunctionCall;
-import ast.nodes.expressions.Identifier;
+import ast.nodes.contents.Content;
+import ast.nodes.contents.PipedVariable;
+import ast.nodes.elements.HTMLElement;
+import ast.nodes.expressions.*;
 
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -65,6 +66,7 @@ public class CodeGenerator {
     public void openScript() {
         GeneratedCode += "<script type=\"text/javascript\">\n";
         GeneratedCode += "  let renders = [];\n";
+        GeneratedCode += "  let new_elements = [];\n";
         GeneratedCode += "  let changes = [];\n\n";
     }
 
@@ -126,7 +128,6 @@ public class CodeGenerator {
         valuesMap.put("elementID", elementID);
         valuesMap.put("variableName", variableName);
         valuesMap.put("defaultText", defaultText);
-
         GeneratedCode += replaceTemplate(Templates.CURLY_TEMPLATE, valuesMap);
     }
 
@@ -172,6 +173,44 @@ public class CodeGenerator {
         valuesMap.put("functionName", cpAppVariable+"."+eventFunction.getIdentifier().toString());
         valuesMap.put("parameters", stringifyFunctionParameters(eventFunction.getArguments()));
         GeneratedCode += replaceTemplate(Templates.EVENT_TEMPLATE, valuesMap);
+    }
+
+    String templates="";
+    public void cpForGenerator(HTMLElement forElement, Attribute forLoop) {
+        renders++;
+        Map<String, String> valuesMap = new HashMap<>();
+        String elementID=forElement.getID();
+        valuesMap.put("elementID", elementID);
+
+        //<div cp-for="key,value in Array"></div>
+
+        //<div cp-for="value in Array"></div>
+
+        //<div cp-for="value in Array;i=index"></div>
+
+        valuesMap.put("ArrayName",((ForLoop)forLoop.getValue()).getObject().toString());
+
+        //value=Array[z]
+        valuesMap.put("Value",((ForLoop)forLoop.getValue()).getValue().toString()+"="+valuesMap.get("ArrayName")+"[z]");
+
+        //i=z
+        if(((ForLoop)forLoop.getValue()).getIndex()!=null)
+        valuesMap.put("Index",((ForLoop)forLoop.getValue()).getIndex().toString()+"=z");
+        else valuesMap.put("index","");
+
+        //key=z
+        if(((ForLoop)forLoop.getValue()).getKey()!=null)
+        valuesMap.put("Key",((ForLoop)forLoop.getValue()).getKey().toString()+"=z");
+        else valuesMap.put("Key","");
+
+
+        GeneratedCode += replaceTemplate(Templates.FOR_TEMPLATE_OPENING, valuesMap);
+    }
+    public void cpForGeneratorClose(String elementID) {
+        Map<String, String> valuesMap = new HashMap<>();
+        valuesMap.put("elementID", elementID);
+        GeneratedCode += replaceTemplate(Templates.FOR_TEMPLATE_CLOSING, valuesMap);
+
     }
 
     public String replaceTemplate(String Template, Map<String, String> valuesMap) {

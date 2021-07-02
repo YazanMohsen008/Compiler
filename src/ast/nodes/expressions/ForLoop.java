@@ -8,6 +8,22 @@ public class ForLoop implements AttributeValue {
     private Expression object;
     private Identifier index;
 
+    public Identifier getKey() {
+        return key;
+    }
+
+    public Identifier getValue() {
+        return value;
+    }
+
+    public Expression getObject() {
+        return object;
+    }
+
+    public Identifier getIndex() {
+        return index;
+    }
+
     public ForLoop(Identifier value, Expression object) {
         this.value = value;
         this.object = object;
