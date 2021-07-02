@@ -2,17 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ea43e868-68f0-49bb-9f3c-47e3b5c21a1d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/CodeGeneration/CodeGenerator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/CodeGeneration/Templates.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/attributes/Attribute.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/attributes/Attribute.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/contents/PipedVariable.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/contents/PipedVariable.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/CodeGeneration/CodeGenerator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/CodeGeneration/CodeGenerator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/CodeGeneration/Templates.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/CodeGeneration/Templates.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/elements/HTMLElement.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/nodes/elements/HTMLElement.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/visitor/ASTBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/compiler_gitlab/ast/visitor/ASTBuilder.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/samples/samples.txt" beforeDir="false" afterPath="$PROJECT_DIR$/samples/samples.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/samples/samples.txt_GeneratedCode.html" beforeDir="false" afterPath="$PROJECT_DIR$/samples/samples.txt_GeneratedCode.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/CodeGeneration/CodeGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CodeGeneration/CodeGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/CodeGeneration/Templates.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CodeGeneration/Templates.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ast/nodes/attributes/Attribute.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/attributes/Attribute.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ast/nodes/contents/PipedVariable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/contents/PipedVariable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/nodes/boolean_expressions/UnaryBooleanExpression.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/boolean_expressions/UnaryBooleanExpression.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ast/nodes/elements/HTMLElement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/elements/HTMLElement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ast/nodes/expressions/FunctionCall.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/nodes/expressions/FunctionCall.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ast/visitor/ASTBuilder.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ast/visitor/ASTBuilder.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -51,7 +53,7 @@
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="preferences.fileTypes" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -99,5 +101,9 @@
         <watch expression="temp.symbols" />
       </configuration>
     </watches-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

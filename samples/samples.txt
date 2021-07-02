@@ -4,8 +4,33 @@
     <title>TEST</title>
   </head>
   <body>
-    <input id="myTestInput" type="text" cp-model="myTest" />
-
-    <div id="myTestDiv">My Text is: {{myTest}}</div>
+    <input
+      id="inputID"
+      name="search"
+      cp-model="x"
+      @click="handleChange(event)"
+      @focus="handleFocus()"
+    />
+    <div id="switchID" cp-switch="x">
+      <h1 cp-switch-case="1">displayed-1</h1>
+      <h2 cp-switch-case="2">displayed-2</h2>
+      <h3 cp-switch-case="3">displayed-3</h3>
+      <h4 cp-switch-case="4">displayed-4</h4>
+      <h2 cp-switchDefault>displayed-default</h2>
+    </div>
+    {{ax}}
   </body>
 </html>
+
+<script>
+  const global = {
+    x: 2,
+    event: 0,
+    handleChange(event) {
+      console.log("click event", event);
+    },
+    handleFocus() {
+      console.log("focus event");
+    },
+  };
+</script>

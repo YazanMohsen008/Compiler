@@ -1,23 +1,37 @@
 package CodeGeneration;
 
+import CodeGeneration.Templates;
+import ast.nodes.boolean_expressions.UnaryBooleanExpression;
+import ast.nodes.expressions.AccessedArrayElement;
+import ast.nodes.expressions.Expression;
+import ast.nodes.expressions.FunctionCall;
+import ast.nodes.expressions.Identifier;
+
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 public class CodeGenerator {
 
     /*
-        1- at start: CodeGenerator codeGenerator = new CodeGenerator();
-        2- set the cpAppVariable when finding cp-app attribute
-        3- generate some code according to the cp-attribute
-        4- at the end: call "saveGeneratedCode"
-    */
+     * 1- at start: CodeGenerator codeGenerator = new CodeGenerator(); 2- set the
+     * cpAppVariable when finding cp-app attribute 3- generate some code according
+     * to the cp-attribute 4- at the end: call "saveGeneratedCode"
+     */
 
     String cpAppVariable = "";
     String GeneratedCode = "";
-                
+
+    int renders = 0;
+    int changes = 0;
+    boolean dateFormatterPipe = false;
+    boolean currencyPipe = false;
+    boolean lowerPipe = false;
+    boolean upperPipe = false;
+
     public CodeGenerator() {
         this.openScript();
     }
@@ -47,16 +61,27 @@ public class CodeGenerator {
             e.printStackTrace();
         }
     }
-                
+
     public void openScript() {
         GeneratedCode += "<script type=\"text/javascript\">\n";
+        GeneratedCode += "  let renders = [];\n";
+        GeneratedCode += "  let changes = [];\n\n";
     }
+
     public void closeScript() {
+        if (renders > 0 || changes > 0) {
+            GeneratedCode += Templates.RENDER_FUNCTION;
+        }
+        if(dateFormatterPipe) GeneratedCode += Templates.DATE_FUNCTION;
+        if(currencyPipe) GeneratedCode += Templates.CURRENCY_FUNCTION;
+        if(lowerPipe) GeneratedCode += Templates.LOWER_FUNCTION;
+        if(upperPipe) GeneratedCode += Templates.UPPER_FUNCTION;
+
         GeneratedCode += "</script>";
     }
 
-    public void cpModelBinder(String elementID, String variableName)
-    {
+
+    public void cpModelBinder(String elementID, String variableName) {
         Map<String, String> valuesMap = new HashMap<>();
         valuesMap.put("cpAppVariable", cpAppVariable);
         valuesMap.put("elementID", elementID);
@@ -65,14 +90,103 @@ public class CodeGenerator {
         GeneratedCode += replaceTemplate(Templates.CP_MODEL_TEMPLATE, valuesMap);
     }
 
-    public String replaceTemplate(String Template,  Map<String, String> map)
+    public void cpSwitchGenerator(String elementID, String variableName) {
+        changes++;
+        Map<String, String> valuesMap = new HashMap<>();
+        valuesMap.put("cpAppVariable", cpAppVariable);
+        valuesMap.put("elementID", elementID);
+        valuesMap.put("variableName", variableName);
+
+        GeneratedCode += replaceTemplate(Templates.CP_SWITCH_TEMPLATE, valuesMap);
+    }
+
+    public void cpShowGenerator(String elementID, String condition) {
+        renders++;
+        Map<String, String> valuesMap = new HashMap<>();
+        valuesMap.put("cpAppVariable", cpAppVariable);
+        valuesMap.put("elementID", elementID);
+        valuesMap.put("condition", condition);
+
+        GeneratedCode += replaceTemplate(Templates.CP_SHOW_TEMPLATE, valuesMap);
+    }
+    public void cpHideGenerator(String elementID, String condition) {
+        renders++;
+        Map<String, String> valuesMap = new HashMap<>();
+        valuesMap.put("cpAppVariable", cpAppVariable);
+        valuesMap.put("elementID", elementID);
+        valuesMap.put("condition", condition);
+
+        GeneratedCode += replaceTemplate(Templates.CP_HIDE_TEMPLATE, valuesMap);
+    }
+
+    public void curlyRenderer(String elementID, String variableName, String defaultText) {
+        renders++;
+        Map<String, String> valuesMap = new HashMap<>();
+        valuesMap.put("cpAppVariable", cpAppVariable);
+        valuesMap.put("elementID", elementID);
+        valuesMap.put("variableName", variableName);
+        valuesMap.put("defaultText", defaultText);
+
+        GeneratedCode += replaceTemplate(Templates.CURLY_TEMPLATE, valuesMap);
+    }
+
+    public void cpIfGenerator(String elementID, String condition) {
+        renders++;
+        Map<String, String> valuesMap = new HashMap<>();
+        valuesMap.put("condition", condition);
+        valuesMap.put("elementID", elementID);
+
+        GeneratedCode += replaceTemplate(Templates.CP_IF_TEMPLATE, valuesMap);
+    }
+
+    public String stringifyFunctionParameters(List<Expression> arguments)
     {
-        for (Map.Entry<String, String> entry : map.entrySet()) {
+        //handleChange(0, "string", varName , function(), !check)
+        
+        String parameters= "" ;
+            for(Expression argument: arguments){
+                
+                if(argument instanceof Identifier)
+                parameters+=cpAppVariable+"."+argument;
+
+                if(argument instanceof FunctionCall)
+                parameters+=cpAppVariable+"."+argument;
+
+                if(argument instanceof AccessedArrayElement)
+                parameters+=cpAppVariable+"."+argument;
+
+                if(argument instanceof UnaryBooleanExpression)
+                    parameters+=((UnaryBooleanExpression)argument).getOperator()
+                    +cpAppVariable+"."+((UnaryBooleanExpression)argument).getOperand();
+
+            }
+            return parameters;
+    }
+
+    public void eventGenerator(String elementID, String eventName, FunctionCall eventFunction)
+    {
+        changes++;
+        Map<String, String> valuesMap = new HashMap<>();
+        valuesMap.put("elementID", elementID);
+        valuesMap.put("eventName", eventName);
+        valuesMap.put("functionName", cpAppVariable+"."+eventFunction.getIdentifier().toString());
+        valuesMap.put("parameters", stringifyFunctionParameters(eventFunction.getArguments()));
+        GeneratedCode += replaceTemplate(Templates.EVENT_TEMPLATE, valuesMap);
+    }
+
+    public String replaceTemplate(String Template, Map<String, String> valuesMap) {
+        for (Map.Entry<String, String> entry : valuesMap.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-
-            Template = Template.replace("{--"+key+"--}" , value);
+            Template = Template.replace("{--" + key + "--}", value);
         }
         return Template;
     }
 }
+ 
+
+
+
+
+
+

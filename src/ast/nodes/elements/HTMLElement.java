@@ -4,8 +4,6 @@ import SymbolTable.SymbolTable;
 import ast.nodes.PrintUtil;
 import ast.nodes.attributes.Attribute;
 import ast.nodes.contents.Content;
-
-import java.util.Arrays;
 import java.util.List;
 
 public class HTMLElement implements Element {
@@ -80,7 +78,7 @@ public class HTMLElement implements Element {
     public String getID() {
         for (Attribute attribute:attributes) {
             if(attribute.isID())
-                return attribute.getValue().toString();
+                return attribute.getValue().toString().substring(1,attribute.getValue().toString().length()-1);
         }//TODO Generate unique ID
         return "Generated ID";
     }

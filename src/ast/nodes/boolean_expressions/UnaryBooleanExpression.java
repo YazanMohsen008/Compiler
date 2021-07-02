@@ -12,6 +12,14 @@ public class UnaryBooleanExpression implements BooleanExpression,Content {
         this.operand = operand;
     }
 
+    public String getOperator() {
+        return operator;
+    }
+
+    public BooleanExpression getOperand() {
+        return operand;
+    }
+
     @Override
     public String toString() {
         String textRepresentation = "";

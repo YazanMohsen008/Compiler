@@ -22,6 +22,14 @@ public class FunctionCall implements BooleanExpression, ArithmeticExpression,
         return arguments.size();
     }
 
+    public Identifier getIdentifier() {
+        return identifier;
+    }
+
+    public List<Expression> getArguments() {
+        return arguments;
+    }
+
     @Override
     public String toString() {
         String textRepresentation = "";

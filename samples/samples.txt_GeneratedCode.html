@@ -4,26 +4,119 @@
     <title>TEST</title>
   </head>
   <body>
-    <input id="myTestInput" type="text" cp-model="myTest" />
-
-    <div id="myTestDiv">My Text is: {{myTest}}</div>
+    <input
+      id="inputID"
+      name="search"
+      cp-model="x"
+      @click="handleChange(event)"
+      @focus="handleFocus()"
+    />
+    <div id="switchID" cp-switch="x">
+      <h1 cp-switch-case="1">displayed-1</h1>
+      <h2 cp-switch-case="2">displayed-2</h2>
+      <h3 cp-switch-case="3">displayed-3</h3>
+      <h4 cp-switch-case="4">displayed-4</h4>
+      <h2 cp-switchDefault>displayed-default</h2>
+    </div>
+    {{ax}}
   </body>
 </html>
 
+<script>
+  const global = {
+    x: 2,
+    event: 0,
+    handleChange(event) {
+      console.log("click event", event);
+    },
+    handleFocus() {
+      console.log("focus event");
+    },
+  };
+</script>
 <script type="text/javascript">
-    const global ={
-    myTest:"test"
-    }
-    document.getElementById("myTestInput").addEventListener("input", (event) => {
-      global.myTest = event.target.value;
-      console.log(global);
-      });
+  let renders = [];
+  let changes = [];
+
     //cp model template 
-    if (global.myTest) {
-      document.getElementById("myTestInput").value =
-        global.myTest;
+    if (global.x) {
+      document.getElementById("inputID").value =
+        global.x;
     }
-    document.getElementById("myTestInput").addEventListener("input", (event) => {
-      global.myTest = event.target.value;
+    document.getElementById("inputID").addEventListener("input", (event) => {
+      global.x = event.target.value;
     });
+
+	 // cp-event 
+    const event_handler_inputID_click = function() {
+        document.getElementById("inputID").addEventListener("click", (event) => {
+            global.handleChange(event);
+        });
+    }
+    changes.push(event_handler_inputID_click)
+
+	 // cp-event 
+    const event_handler_inputID_focus = function() {
+        document.getElementById("inputID").addEventListener("focus", (event) => {
+            global.handleFocus();
+        });
+    }
+    changes.push(event_handler_inputID_focus)
+
+  //cp switch
+  const switchFunc_switchID = function () {
+    const switchElement = document.getElementById("switchID");
+    const value = global.x;
+
+    let matchFound = false;
+    for (let i = 0; i < switchElement.children.length - 1; i++) {
+      const child = switchElement.children[i];
+      const switchCaseValue = child.getAttribute("cp-switch-case");
+
+      //Switch Case
+      if (switchCaseValue !== null) {
+         //match case
+         if (!matchFound && switchCaseValue == value) {
+           child.hidden = false;
+           matchFound = true;
+         } else {
+           child.hidden = true;
+         }
+      }
+    }
+    const lastChildren =
+      switchElement.children[switchElement.children.length - 1];
+    if (!matchFound && lastChildren.getAttribute("cp-switchDefault") !== null) {
+      lastChildren.hidden = false;
+    } else {
+      lastChildren.hidden = true;
+    }
+  };
+  renders.push(switchFunc_switchID);
+
+   //Curly Braces Renderer
+    const curly_render_function_Generated ID_ax = function() {
+    const defaultText = "{{ax}}";
+    if(global.ax !== undefined) {
+      document.getElementById("Generated ID").innerHTML = defaultText.replace(
+        `{{ax}}`,
+        global.ax
+      )
+    }
+  }
+  renders.push(curly_render_function_Generated ID_ax);
+
+  function render() {
+    setInterval(() => {
+      for(let i = 0; i < changes.length; i++) {
+          changes[i]();
+      }
+      changes = [];
+      for (let i = 0; i < renders.length; i++) {
+         renders[i]();
+      }
+    }, 1000);
+  }
+  render();
+
 </script>

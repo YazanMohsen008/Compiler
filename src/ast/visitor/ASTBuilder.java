@@ -68,7 +68,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     HTMLElement ParentElement;
-
+    String defaultText;
     /**
      * element Rule
      */
@@ -129,10 +129,15 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         }
 
         htmlElement.setAttributes(attributes);
+
         for (Attribute attribute : attributes) {
             if (attribute.isCpModel()) {
                 codeGenerator.cpModelBinder(htmlElement.getID(), attribute.getValue().toString());
             }
+            if (attribute.isEvent()) {
+                codeGenerator.eventGenerator(htmlElement.getID(),attribute.getName().substring(1),(FunctionCall) attribute.getValue());
+            }
+
         }
         List<Content> contents = null;
         // If It's An Empty Element, Then It Has No Content.
@@ -140,14 +145,27 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         if (ctx.TAG_NAME(1) != null) {
             closingTagName = ctx.TAG_NAME(1).getText();
             contents = new ArrayList<>();
-
+            defaultText = "";
             //TO Get its Children
             for (int i = 0; i < ctx.content().size(); i++) {
                 ParentElement = htmlElement;
                 Content content = (Content) visit(ctx.content(i));
                 contents.add(content);
+
+                if (content instanceof PipedVariable) {
+                    defaultText += "{{" + content + "}}";
+                } else if (!(content instanceof Element))
+                    defaultText += content;
+            }
+            for ( Content content :contents) {
+                if(content instanceof  PipedVariable) {
+                    PipedVariable pipedVariable = (PipedVariable)content;
+                    codeGenerator.curlyRenderer(htmlElement.getID(),pipedVariable.getVariable().toString(),defaultText);
+                }
             }
         }
+
+
         //Pop the Opened Scope
         if (CurrentTable.getParent() != null && ScopeOpened) {
             CurrentTable = CurrentTable.getParent();
@@ -156,6 +174,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         htmlElement.setClosingTagName(closingTagName);
         htmlElement.setContents(contents);
         return htmlElement;
+
     }
 
 
@@ -297,8 +316,10 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     public Object visitMouseoverAttribute(HTMLParser.MouseoverAttributeContext ctx) {
         ForceDeclaration = false;
         newDeclaration = false;
-        return new Attribute(ctx.MOUSEOVER().getText(),
+        Attribute attribute= new Attribute(ctx.MOUSEOVER().getText(),
                 (AttributeValue) visit(ctx.objectChainedMembers()));
+        codeGenerator.eventGenerator(ParentElement.getID(),attribute.getName(),(FunctionCall) attribute.getValue());
+        return attribute;
     }
 
 
@@ -737,7 +758,12 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         }
 
         attributes.add((Attribute) visit(ctx.switchAttribute()));
+        switchElement.setAttributes(attributes);
 
+        for (Attribute attribute : attributes) {
+            if (attribute.isCpSwitch())
+                codeGenerator.cpSwitchGenerator(switchElement.getID(), attribute.getValue().toString());
+        }
         List<SwitchCaseElement> elements = new ArrayList<>();
         for (HTMLParser.SwitchCaseContext item : ctx.switchCase()) {
             ParentElement = switchElement;
@@ -956,16 +982,6 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
             pipes.add((Pipe) visit(ctx.pipes(i)));
         }
         PipedVariable pipedVariable = new PipedVariable(variable, pipes);
-        String renderScript =
-                "\n<script type=\"text/javascript\">" +
-                        "  function render() {\n" +
-                        "    setInterval(() => {\n" +//TODO Send pipes as Parameters or in PipedVariable String ?
-                        "      replaceCurlyBraces(" + ParentElement.getID() + ", \"" + pipedVariable.getVariable() + "\");\n" +
-                        "    }, 1000);\n" +
-                        "  }\n" +
-                        "  render();" +
-                        "  </script>\n";
-//            GeneratedCode += renderScript;
 
         return pipedVariable;
     }
