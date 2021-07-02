@@ -11,14 +11,20 @@ public class Templates {
                         + "    document.getElementById(\"{--elementID--}\").addEventListener(\"input\", (event) => {\n"
                         + "      {--cpAppVariable--}.{--variableName--} = event.target.value;\n" + "    });\n\n";
 
-        public static String CURLY_TEMPLATE = "   //Curly Braces Renderer\n "
-                        + "   const curly_render_function_{--elementID--}_{--variableName--} = function() {\n"
-                        + "    const defaultText = \"{--defaultText--}\";\n"
-                        + "    if({--cpAppVariable--}.{--variableName--} !== undefined) {\n"
-                        + "      document.getElementById(\"{--elementID--}\").innerHTML = defaultText.replace(\n"
-                        + "        `{{{--variableName--}}}`,\n" + "        {--cpAppVariable--}.{--variableName--}\n"
-                        + "      )\n" + "    }\n" + "  }\n"
-                        + "  renders.push(curly_render_function_{--elementID--}_{--variableName--});\n\n";
+        public static String CURLY_TEMPLATE =
+                "   //Curly Braces Renderer\n " +
+                "   const curly_render_function_{--elementID--} = function() {\n" +
+                "       let defaultText = `{--defaultText--}`;\n" +
+                "       const targetCurlys = [{--targetCurlys--}];\n" +
+                "\n" +
+                "       const filters = [{--filters--}];\n" +
+                "\n" +
+                "       filters.map((filter, index) => {\n" +
+                "          defaultText = defaultText.replace(targetCurlys[index], filter());\n" +
+                "          document.getElementById(\"{--elementID--}\").innerHTML = defaultText;\n" +
+                "       });\n" +
+                "  }\n" +
+                "  renders.push(curly_render_function_{--elementID--});\n\n";
 
 
         public static String CP_SHOW_TEMPLATE =
@@ -125,43 +131,44 @@ public class Templates {
                  "\n" +
                  "\n";
 
-// built in function
+        // built in function
 
         // to lower
         public static String LOWER_FUNCTION = 
                         "function lower(str) {\n" +
                         "  return str.toLowerCase();\n" +
-                        "}";
+                        "}\n";
 
         // to upper 
         public static String UPPER_FUNCTION = 
-                        "function upper(str) {\n" +
-                        "  return str.toUpperCase();\n" +
-                        "}";
+                        "  function upper(str) {\n" +
+                        "   return str.toUpperCase();\n" +
+                        "  }\n";
                         
         // currency
         public static String CURRENCY_FUNCTION = 
-                        "function currency(value, curr) {\n" +
+                        " function currency(value, curr) {\n" +
+                        "  if(!value) return \"\";\n" +
                         "  let symbol;\n" +
                         "  switch (curr) {\n" +
-                        "    case \"en\":\n" +
+                        "    case \"D\":\n" +
                         "      symbol = \"$\";\n" +
                         "      break;\n" +
                         "  }\n" +
-                        "  return sybmol + value;\n" +
-                        "}\n";
+                        "  return symbol + value;\n" +
+                        " }\n";
 
         // date
         public static String DATE_FUNCTION = 
-                    "function dateFormatter(date, format) {\n" +
-                    "  const year = new Intl.DateTimeFormat(\"en\", { year: \"numeric\" }).format(date);\n" +
+                    "function date(dt, format) {\n" +
+                    "  const year = new Intl.DateTimeFormat(\"en\", { year: \"numeric\" }).format(dt);\n" +
                     "  const month = new Intl.DateTimeFormat(\"en\", { month: \"2-digit\" }).format(\n" +
-                    "    date\n" +
+                    "    dt\n" +
                     "  );\n" +
-                    "  const day = new Intl.DateTimeFormat(\"en\", { day: \"2-digit\" }).format(date);\n" +
-                    "  const hour = date.getHours();\n" +
-                    "  const min = date.getMinutes();\n" +
-                    "  const sec = date.getSeconds();\n" +
+                    "  const day = new Intl.DateTimeFormat(\"en\", { day: \"2-digit\" }).format(dt);\n" +
+                    "  const hour = dt.getHours();\n" +
+                    "  const min = dt.getMinutes();\n" +
+                    "  const sec = dt.getSeconds();\n" +
                     "\n" +
                     "  switch (format) {\n" +
                     "    case \"mm-yyyy\":\n" +
@@ -190,5 +197,3 @@ public class Templates {
                     "}\n";        
 
 }
-
-    

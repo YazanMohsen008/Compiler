@@ -1,9 +1,9 @@
 package CodeGeneration;
-
 import CodeGeneration.Templates;
 import ast.nodes.attributes.Attribute;
 import ast.nodes.boolean_expressions.UnaryBooleanExpression;
 import ast.nodes.contents.Content;
+import ast.nodes.contents.Pipe;
 import ast.nodes.contents.PipedVariable;
 import ast.nodes.elements.HTMLElement;
 import ast.nodes.expressions.*;
@@ -18,6 +18,7 @@ import java.util.Scanner;
 public class CodeGenerator {
 
     /*
+    
      * 1- at start: CodeGenerator codeGenerator = new CodeGenerator(); 2- set the
      * cpAppVariable when finding cp-app attribute 3- generate some code according
      * to the cp-attribute 4- at the end: call "saveGeneratedCode"
@@ -52,7 +53,11 @@ public class CodeGenerator {
                 Content += scanner.nextLine() + "\n";
             }
 
-            FileWriter fileWriter = new FileWriter(sourceFilename + "_GeneratedCode.html");
+            int dotIndex = sourceFilename.indexOf(".");
+            String fileName = sourceFilename.substring(0, dotIndex);
+            String type = sourceFilename.substring(dotIndex+1);
+            String outputFileName = fileName + "_GENERATED." + type;
+            FileWriter fileWriter = new FileWriter(outputFileName);
             fileWriter.write(Content);
             fileWriter.write(GeneratedCode);
             fileWriter.close();
@@ -121,13 +126,47 @@ public class CodeGenerator {
         GeneratedCode += replaceTemplate(Templates.CP_HIDE_TEMPLATE, valuesMap);
     }
 
-    public void curlyRenderer(String elementID, String variableName, String defaultText) {
+    public String getFiltersTemplate(PipedVariable pipedVariable) {
+        String variableName = pipedVariable.getVariable().toString();
+        String filter = "\n\t   () => {\n" +
+                        "\t\tlet value = " + cpAppVariable + "." + variableName + "\n";
+
+        List<Pipe> pipes = pipedVariable.getPipes();
+        for(Pipe pipe : pipes) {
+            String pipeName = pipe.getName();
+            if(pipeName.equals("lower")) lowerPipe = true;
+            if(pipeName.equals("upper")) upperPipe = true;
+            if(pipeName.equals("date")) dateFormatterPipe = true;
+            if(pipeName.equals("currency")) currencyPipe = true;
+
+            filter += "\t\tvalue = " + pipeName + "(value";
+            if(pipe.getParameter() != null)
+                filter += ", \"" + pipe.getParameter() +"\"";
+            filter += ");\n";
+        }
+
+        filter += "\t\treturn value;\n    \t},\n";
+        return filter;
+    }
+
+    public void curlyRenderer(String elementID, List<PipedVariable> pipedVariables, String defaultText)
+    {
         renders++;
+        String filters = "";
+        String targetCurlys = "\n";
+        for(PipedVariable pipedVariable : pipedVariables) {
+            filters += getFiltersTemplate(pipedVariable);
+            targetCurlys += "\t\t" + "'" + pipedVariable.stringify() + "',\n";
+        }
+        targetCurlys += "\t";
+        filters += "\t";
+
         Map<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("cpAppVariable", cpAppVariable);
         valuesMap.put("elementID", elementID);
-        valuesMap.put("variableName", variableName);
         valuesMap.put("defaultText", defaultText);
+        valuesMap.put("targetCurlys", targetCurlys);
+        valuesMap.put("filters", filters);
+
         GeneratedCode += replaceTemplate(Templates.CURLY_TEMPLATE, valuesMap);
     }
 

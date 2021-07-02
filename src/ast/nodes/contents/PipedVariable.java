@@ -13,6 +13,18 @@ public class PipedVariable implements Content {
         this.pipes = pipes;
     }
 
+    public String stringify() {
+        String temp = "{{" + variable;
+        for(Pipe pipe : pipes) {
+            temp += "|" + pipe.getName();
+            String parameter = pipe.getParameter();
+            if(parameter != null)
+                temp += ":\"" + parameter + "\"";
+        }
+        temp += "}}";
+        return temp;
+    }
+
     @Override
     public String toString() {
         String textRepresentation = "";
@@ -34,4 +46,5 @@ public class PipedVariable implements Content {
     public Variable getVariable() {
         return variable;
     }
+    public List<Pipe> getPipes() { return this.pipes; }
 }

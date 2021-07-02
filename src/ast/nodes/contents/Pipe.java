@@ -12,6 +12,9 @@ public class Pipe {
     static final String UPPER = "upper";
     static final String LOWER = "lower";
 
+    public String getParameter() {return this.parameter;}
+    public String getName() { return this.name; }
+
     public Pipe(String name) {
         this.name = name;
     }
@@ -40,6 +43,7 @@ public class Pipe {
         if(!(
                   parameter.equalsIgnoreCase("dd/mm/yyyy h:m:s")
                 ||parameter.equalsIgnoreCase("dd/mm/yyyy h:m")
+                ||parameter.equalsIgnoreCase("dd/mm/yyyy")
 
                 ||parameter.equalsIgnoreCase("mm/dd/yyyy h:m:s")
                 ||parameter.equalsIgnoreCase("mm/dd/yyyy h:m")

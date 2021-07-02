@@ -2,7 +2,7 @@ parser grammar HTMLParser;
 
 options { tokenVocab=HTMLLexer; }
 
-htmlDocument : SCRIPTLET* XML? SCRIPTLET* DTD? SCRIPTLET* element* ;
+htmlDocument :(SEA_WS)* SCRIPTLET* (SEA_WS)* XML? (SEA_WS)* SCRIPTLET* (SEA_WS)* DTD? (SEA_WS)* SCRIPTLET* (SEA_WS)* element* ;
 
 element
     :  (SEA_WS)*TAG_OPEN  TAG_NAME (TAG_WS)* attribute*

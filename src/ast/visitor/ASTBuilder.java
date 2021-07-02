@@ -148,22 +148,21 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
             contents = new ArrayList<>();
             defaultText = "";
             //TO Get its Children
+
+            List<PipedVariable> pipedVariables = new ArrayList<>();
             for (int i = 0; i < ctx.content().size(); i++) {
-                ParentElement = htmlElement;
+				ParentElement = htmlElement;
                 Content content = (Content) visit(ctx.content(i));
                 contents.add(content);
-
-                if (content instanceof PipedVariable) {
-                    defaultText += "{{" + content + "}}";
+				
+				if(content instanceof  PipedVariable) {
+                    pipedVariables.add((PipedVariable)content);
+                    defaultText += ((PipedVariable) content).stringify();
                 } else if (!(content instanceof Element))
                     defaultText += content;
             }
-            for ( Content content :contents) {
-                if(content instanceof  PipedVariable) {
-                    PipedVariable pipedVariable = (PipedVariable)content;
-                    codeGenerator.curlyRenderer(htmlElement.getID(),pipedVariable.getVariable().toString(),defaultText);
-                }
-            }
+			if(pipedVariables.size() > 0)
+			    codeGenerator.curlyRenderer(htmlElement.getID(), pipedVariables, defaultText);
         }
 
 
