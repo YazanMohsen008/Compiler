@@ -12,19 +12,15 @@ public class AccessedArrayElement implements BooleanExpression, ArithmeticExpres
     private ArithmeticExpression index;
     private ObjectMember parent;
     private Symbol symbol;
+    private String CpAppVariable="";
+    ;
 
     public AccessedArrayElement(Identifier identifier, ArithmeticExpression index) {
         this.identifier = identifier;
         this.index = index;
     }
 
-    @Override
-    public String toString() {
-        String textRepresentation = "";
-        textRepresentation += this.identifier;
-        textRepresentation += "[" + this.index + "]";
-        return textRepresentation;
-    }
+
 
     @Override
     public void setParent(ObjectMember parent) {
@@ -52,9 +48,20 @@ public class AccessedArrayElement implements BooleanExpression, ArithmeticExpres
     }
 
     @Override
+    public void setGlobal(String CpAppVariable) {
+        this.CpAppVariable=CpAppVariable+".";
+
+    }
+    @Override
     public String toString(int col) {
         String indent = PrintUtil.getIndent(col);
         return indent +toString();
     }
-
+    @Override
+    public String toString() {
+        String textRepresentation = CpAppVariable;
+        textRepresentation += this.identifier;
+        textRepresentation += "[" + this.index + "]";
+        return textRepresentation;
+    }
 }

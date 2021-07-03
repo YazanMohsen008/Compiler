@@ -1,36 +1,35 @@
+<!-- --------------------------------------------------------------------- -->
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Sample 7 everything</title>
+ <title>Sample 7 everything</title>
 </head>
 
-<body id="appA" cp-app="forthyear">
+<body id ="app"cp-app="forthyear">
 
-    <div>
-        <span>Id</span> <input id="modelA" type="number" cp-model="newObj.newId" /> <br />
-        <span>Name</span> <input id="modelB" type="text" cp-model="newObj.newName" /> <br />
-        <span>Date</span> <input id="modelC" type="date" cp-model="newObj.newDate" /> <br />
-        <button id="click" @click="addSt()">Add</button>
-    </div>
+<div>
+ <span>Id</span> <input id ="id" type="number" cp-model="newObj.newId" /> <br />
+ <span>Name</span> <input id ="name"  type="text" cp-model="newObj.newName" /> <br />
+ <span>Date</span> <input id ="date" type="date" cp-model="newObj.newDate" /> <br />
+ <button id ="click" @click="addSt()">Add</button>
+</div>
 
-    <div id="ifA" cp-if="newAddedSt.Id">
-        <span>the new St id: {{newAddedSt.newId}}</span>
-        <span>the new St Name: {{newAddedSt.newId | lower}}</span>
-        <span>the new St Date: {{newAddedSt.newId | date:'dd/mm/yyyy'}}</span> <!-- any date format you want  -->
-    </div>
+<div id ="if" cp-if="newAddedSt.Id">
+ <span id ="span1" >the new St id: {{newAddedSt.newId}}</span>
+ <span id ="span2">the new St Name: {{newAddedSt.newName | lower}}</span>
+ <span id ="span3">the new St Date: {{newAddedSt.newDate | date:'dd/mm/yyyy'}}</span> <!-- any date format you want  -->
+</div>
 
-    <table>
-        <thead>
-            <th id="forA" cp-for="k,v in obj[0]">{{k}}</th>
-        </thead>
-        <tr id="forB" cp-for="st in obj">
-            <td id="forC" cp-for="s in st">{{s}}</td>
-        </tr>
-    </table>
+<table>
+ <tr id ="forOuter" cp-for="st in obj">
+  <td id ="forInside"cp-for="s in st">{{s}}</td>
+ </tr>
+</table>
 
 
-    <script>
+<script>
         function forthyear() {
             let scope = this;
             scope.newObj = {};
@@ -55,6 +54,8 @@
     </script>
 
 </body>
+
+</html>
 <script type="text/javascript">
   let renders = [];
   let new_elements = [];
@@ -62,29 +63,29 @@
 
     //cp model template 
     if (forthyear.newObj.newId) {
-      document.getElementById("modelA").value =
-        forthyear.newObj.newId;
+    document.getElementById("id").value =
+    forthyear.newObj.newId;
     }
-    document.getElementById("modelA").addEventListener("input", (event) => {
-      forthyear.newObj.newId = event.target.value;
+    document.getElementById("id").addEventListener("input", (event) => {
+    forthyear.newObj.newId = event.target.value;
     });
 
     //cp model template 
     if (forthyear.newObj.newName) {
-      document.getElementById("modelB").value =
-        forthyear.newObj.newName;
+    document.getElementById("name").value =
+    forthyear.newObj.newName;
     }
-    document.getElementById("modelB").addEventListener("input", (event) => {
-      forthyear.newObj.newName = event.target.value;
+    document.getElementById("name").addEventListener("input", (event) => {
+    forthyear.newObj.newName = event.target.value;
     });
 
     //cp model template 
     if (forthyear.newObj.newDate) {
-      document.getElementById("modelC").value =
-        forthyear.newObj.newDate;
+    document.getElementById("date").value =
+    forthyear.newObj.newDate;
     }
-    document.getElementById("modelC").addEventListener("input", (event) => {
-      forthyear.newObj.newDate = event.target.value;
+    document.getElementById("date").addEventListener("input", (event) => {
+    forthyear.newObj.newDate = event.target.value;
     });
 
 	 // cp-event 
@@ -95,11 +96,23 @@
     }
     changes.push(event_handler_click_click);
 
+	// cp-if generated code 
+   const cp_if_function_if = function() {
+    const ifElement = document.getElementById("if");
+    if (forthyear.newAddedSt.Id) {
+      ifElement.hidden = false;
+    }
+    else{
+      ifElement.hidden = true;
+    }
+  }
+  renders.push(cp_if_function_if);
+
    //Curly Braces Renderer
-    const curly_render_function_Generated ID = function() {
-       let defaultText = `the new St id: {{newAddedSt.newId}}`;
+    const curly_render_function_span1 = function() {
+       let defaultText = `the new St id: {{forthyear.newAddedSt.newId}}`;
        const targetCurlys = [
-		'{{newAddedSt.newId}}',
+		'{{forthyear.newAddedSt.newId}}',
 	];
 
        const filters = [
@@ -111,21 +124,21 @@
 
        filters.map((filter, index) => {
           defaultText = defaultText.replace(targetCurlys[index], filter());
-          document.getElementById("Generated ID").innerHTML = defaultText;
+          document.getElementById("span1").innerHTML = defaultText;
        });
   }
-  renders.push(curly_render_function_Generated ID);
+  renders.push(curly_render_function_span1);
 
    //Curly Braces Renderer
-    const curly_render_function_Generated ID = function() {
-       let defaultText = `the new St Name: {{newAddedSt.newId|lower}}`;
+    const curly_render_function_span2 = function() {
+       let defaultText = `the new St Name: {{forthyear.newAddedSt.newName|lower}}`;
        const targetCurlys = [
-		'{{newAddedSt.newId|lower}}',
+		'{{forthyear.newAddedSt.newName|lower}}',
 	];
 
        const filters = [
 	   () => {
-		let value = forthyear.newAddedSt.newId
+		let value = forthyear.newAddedSt.newName
 		value = lower(value);
 		return value;
     	},
@@ -133,21 +146,21 @@
 
        filters.map((filter, index) => {
           defaultText = defaultText.replace(targetCurlys[index], filter());
-          document.getElementById("Generated ID").innerHTML = defaultText;
+          document.getElementById("span2").innerHTML = defaultText;
        });
   }
-  renders.push(curly_render_function_Generated ID);
+  renders.push(curly_render_function_span2);
 
    //Curly Braces Renderer
-    const curly_render_function_Generated ID = function() {
-       let defaultText = `the new St Date: {{newAddedSt.newId|date:"dd/mm/yyyy"}}`;
+    const curly_render_function_span3 = function() {
+       let defaultText = `the new St Date: {{forthyear.newAddedSt.newDate|date:"dd/mm/yyyy"}}`;
        const targetCurlys = [
-		'{{newAddedSt.newId|date:"dd/mm/yyyy"}}',
+		'{{forthyear.newAddedSt.newDate|date:"dd/mm/yyyy"}}',
 	];
 
        const filters = [
 	   () => {
-		let value = forthyear.newAddedSt.newId
+		let value = forthyear.newAddedSt.newDate
 		value = date(value, "dd/mm/yyyy");
 		return value;
     	},
@@ -155,87 +168,35 @@
 
        filters.map((filter, index) => {
           defaultText = defaultText.replace(targetCurlys[index], filter());
-          document.getElementById("Generated ID").innerHTML = defaultText;
+          document.getElementById("span3").innerHTML = defaultText;
        });
   }
-  renders.push(curly_render_function_Generated ID);
+  renders.push(curly_render_function_span3);
 
- var cpFor_forA = function (event) {
-        let originalElement = document.getElementById("forA");
+ var cpFor_forOuter = function (event) {
+        let originalElement = document.getElementById("forOuter");
         let container = originalElement.parentElement;
 
-        for (var z in obj[0]) {
+        for (var z in forthyear.obj) {
           let elem = originalElement.cloneNode(true);
+           
+          let st=forthyear.obj[z];
           
-          v=obj[0][z]
-          k=z
-          elem.id = "forA" + z;
+          elem.id = "forOuter" + z;
 
-   //Curly Braces Renderer
-    const curly_render_function_forA = function() {
-       let defaultText = `{{k}}`;
-       const targetCurlys = [
-		'{{k}}',
-	];
-
-       const filters = [
-	   () => {
-		let value = forthyear.k
-		return value;
-    	},
-	];
-
-       filters.map((filter, index) => {
-          defaultText = defaultText.replace(targetCurlys[index], filter());
-          document.getElementById("forA").innerHTML = defaultText;
-       });
-  }
-  renders.push(curly_render_function_forA);
-
-
-          elem.hidden = false;
-          container.appendChild(elem);
-          new_elements.push(elem);
-        }
-        originalElement.hidden = true;
-      };
-      renders.push(cpFor_forA);
-
-
- var cpFor_forB = function (event) {
-        let originalElement = document.getElementById("forB");
-        let container = originalElement.parentElement;
-
-        for (var z in obj) {
-          let elem = originalElement.cloneNode(true);
-          
-          st=obj[z]
-          
-          elem.id = "forB" + z;
-
- var cpFor_forC = function (event) {
-        let originalElement = document.getElementById("forC");
+ var cpFor_forInside = function (event) {
+        let originalElement = document.getElementById("forInside");
         let container = originalElement.parentElement;
 
         for (var z in st) {
           let elem = originalElement.cloneNode(true);
+           
+          let s=st[z];
           
-          s=st[z]
-          
-          elem.id = "forC" + z;
-
-
-          elem.hidden = false;
-          container.appendChild(elem);
-          new_elements.push(elem);
-        }
-        originalElement.hidden = true;
-      };
-      renders.push(cpFor_forC);
-
+          elem.id = "forInside" + z;
 
    //Curly Braces Renderer
-    const curly_render_function_forB = function() {
+    const curly_render_function_forInside = function() {
        let defaultText = `{{s}}`;
        const targetCurlys = [
 		'{{s}}',
@@ -243,17 +204,17 @@
 
        const filters = [
 	   () => {
-		let value = forthyear.s
+		let value = s
 		return value;
     	},
 	];
 
        filters.map((filter, index) => {
           defaultText = defaultText.replace(targetCurlys[index], filter());
-          document.getElementById("forB").innerHTML = defaultText;
+          document.getElementById("forInside").innerHTML = defaultText;
        });
   }
-  renders.push(curly_render_function_forB);
+  renders.push(curly_render_function_forInside);
 
 
           elem.hidden = false;
@@ -262,7 +223,17 @@
         }
         originalElement.hidden = true;
       };
-      renders.push(cpFor_forB);
+      renders.push(cpFor_forInside);
+
+
+
+          elem.hidden = false;
+          container.appendChild(elem);
+          new_elements.push(elem);
+        }
+        originalElement.hidden = true;
+      };
+      renders.push(cpFor_forOuter);
 
 
   function render() {
@@ -282,6 +253,8 @@
   render();
 
 function date(dt, format) {
+  if(!dt) return "-/-/-";
+  dt = new Date(dt);
   const year = new Intl.DateTimeFormat("en", { year: "numeric" }).format(dt);
   const month = new Intl.DateTimeFormat("en", { month: "2-digit" }).format(
     dt
@@ -317,6 +290,6 @@ function date(dt, format) {
   }
 }
 function lower(str) {
-  return str.toLowerCase();
+   if(!str) return "";  return str.toLowerCase();
 }
 </script>

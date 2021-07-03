@@ -27,6 +27,7 @@ attribute
     | CP_MODEL      (CP_MIDDLE_WS)* ATTRIBUTE_EQUALS (CP_MIDDLE_WS)* DOUBLE_QUOTE_OPEN  (CP_WS)* numericValue           DQ (TAG_WS)* #cp_modelAttribute
     | CLICK         (CP_MIDDLE_WS)* ATTRIBUTE_EQUALS (CP_MIDDLE_WS)* DOUBLE_QUOTE_OPEN  (CP_WS)* objectChainedMembers   DQ (TAG_WS)* #clickAttribute
     | MOUSEOVER     (CP_MIDDLE_WS)* ATTRIBUTE_EQUALS (CP_MIDDLE_WS)* DOUBLE_QUOTE_OPEN  (CP_WS)* objectChainedMembers   DQ (TAG_WS)* #mouseoverAttribute
+    | MOUSEMOVE     (CP_MIDDLE_WS)* ATTRIBUTE_EQUALS (CP_MIDDLE_WS)* DOUBLE_QUOTE_OPEN  (CP_WS)* objectChainedMembers   DQ (TAG_WS)* #mousemoveAttribute
     | TAG_NAME     ((TAG_WS)* TAG_EQUALS (TAG_WS)*ATTVALUE_VALUE)? (TAG_WS)*                                 #non_cpAttribute
     ;
 

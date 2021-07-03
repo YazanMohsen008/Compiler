@@ -20,4 +20,6 @@ public interface ObjectMember {
 
     void setSymbol(Symbol symbol);
 
+    void setGlobal(String CpAppVariable);
+
 }

@@ -51,7 +51,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         if (semanticErrors.size() == 0)
             printSymbolTableTree(GlobalSymbolTableReference);
 
-        codeGenerator.saveGeneratedCode("samples//samples.txt");
+        codeGenerator.saveGeneratedCode("samples//samples.html");
         return new HtmlDocument(scriptlets, xml, dtd, elements, HTMLDocIDs, semanticErrors);
     }
 
@@ -139,6 +139,16 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
             if (attribute.isCpFor()) {
                 codeGenerator.cpForGenerator(htmlElement,attribute);
             }
+            if (attribute.isIF()) {
+                codeGenerator.cpIfGenerator(htmlElement.getID(),attribute.getValue().toString());
+            }
+            if (attribute.isCpShow()) {
+                codeGenerator.cpShowGenerator(htmlElement.getID(),attribute.getValue().toString());
+            }
+
+            if (attribute.isCpHide()) {
+                codeGenerator.cpHideGenerator(htmlElement.getID(),attribute.getValue().toString());
+            }
         }
         List<Content> contents = null;
         // If It's An Empty Element, Then It Has No Content.
@@ -173,10 +183,8 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         }
         htmlElement.setClosingTagName(closingTagName);
         htmlElement.setContents(contents);
-
-            if (htmlElement.haveFor()) {
+        if (htmlElement.haveFor())
                 codeGenerator.cpForGeneratorClose(htmlElement.getID());
-        }
         return htmlElement;
 
     }
@@ -322,7 +330,15 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
         newDeclaration = false;
         Attribute attribute= new Attribute(ctx.MOUSEOVER().getText(),
                 (AttributeValue) visit(ctx.objectChainedMembers()));
-        codeGenerator.eventGenerator(ParentElement.getID(),attribute.getName(),(FunctionCall) attribute.getValue());
+        return attribute;
+    }
+
+    @Override
+    public Object visitMousemoveAttribute(HTMLParser.MousemoveAttributeContext ctx) {
+        ForceDeclaration = false;
+        newDeclaration = false;
+        Attribute attribute= new Attribute(ctx.MOUSEMOVE().getText(),
+                (AttributeValue) visit(ctx.objectChainedMembers()));
         return attribute;
     }
 
@@ -479,11 +495,15 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private Symbol getObjectMemberSymbol(ObjectMember objectMember) {
+
+        System.out.println("objectMember:   "+objectMember+"   "+ForceDeclaration);
+
         boolean found = false;
         Symbol symbol = null;
         SymbolTable temp = CurrentTable;
 //        cp-model put the Symbol in Current Scope
         if (newDeclaration) {
+            objectMember.setGlobal(codeGenerator.getCpAppVariable());
             symbol = temp.insert(objectMember);
         } else {
 //        Getting Reference for old Symbol not new Scope
@@ -505,10 +525,15 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
                     if (found) break;
                     temp = temp.getParent();
                 }
-                if (temp == null)
+                if (temp == null) {
                     symbol = GlobalSymbolTableReference.insert(objectMember);
+                    objectMember.setGlobal(codeGenerator.getCpAppVariable());
+                }
                 else
                     symbol = temp.insert(objectMember);
+            if(temp!=null && temp.getName().equals(GlobalSymbolTableReference.getName()))
+                objectMember.setGlobal(codeGenerator.getCpAppVariable());
+
             } else {
                 //Semantic 2:  The iterator variable should not repeat.
                 while (temp != null) {
@@ -986,9 +1011,7 @@ public class ASTBuilder extends HTMLParserBaseVisitor<Object> {
             }
             pipes.add((Pipe) visit(ctx.pipes(i)));
         }
-        PipedVariable pipedVariable = new PipedVariable(variable, pipes);
-
-        return pipedVariable;
+         return new PipedVariable(variable, pipes);
     }
 
 

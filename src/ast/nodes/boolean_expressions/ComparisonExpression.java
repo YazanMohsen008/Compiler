@@ -18,7 +18,8 @@ public class ComparisonExpression implements BooleanExpression,Content  {
 
     @Override
     public String toString() {
-        String textRepresentation = "Comparison Expression: ";
+//        String textRepresentation = "Comparison Expression: ";
+        String textRepresentation = " ";
         textRepresentation += "(" + this.leftOperand + ")";
         textRepresentation += " " + this.operator + " ";
         textRepresentation += "(" + this.rightOperand + ")";

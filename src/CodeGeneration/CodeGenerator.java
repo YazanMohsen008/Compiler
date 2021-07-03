@@ -42,6 +42,10 @@ public class CodeGenerator {
         this.cpAppVariable = cpAppVariable;
     }
 
+    public String getCpAppVariable() {
+        return cpAppVariable;
+    }
+
     public void saveGeneratedCode(String sourceFilename) {
         this.closeScript();
 
@@ -90,7 +94,6 @@ public class CodeGenerator {
 
     public void cpModelBinder(String elementID, String variableName) {
         Map<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("cpAppVariable", cpAppVariable);
         valuesMap.put("elementID", elementID);
         valuesMap.put("variableName", variableName);
 
@@ -99,8 +102,9 @@ public class CodeGenerator {
 
     public void cpSwitchGenerator(String elementID, String variableName) {
         changes++;
+        String functionName = fixFunctionName("switchFunc_" + elementID);
         Map<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("cpAppVariable", cpAppVariable);
+        valuesMap.put("functionName", functionName);
         valuesMap.put("elementID", elementID);
         valuesMap.put("variableName", variableName);
 
@@ -109,8 +113,9 @@ public class CodeGenerator {
 
     public void cpShowGenerator(String elementID, String condition) {
         renders++;
+        String functionName = fixFunctionName("cp_show_function_" + elementID);
         Map<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("cpAppVariable", cpAppVariable);
+        valuesMap.put("functionName", functionName);
         valuesMap.put("elementID", elementID);
         valuesMap.put("condition", condition);
 
@@ -118,8 +123,9 @@ public class CodeGenerator {
     }
     public void cpHideGenerator(String elementID, String condition) {
         renders++;
+        String functionName = fixFunctionName("cp_hide_function" + elementID);
         Map<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("cpAppVariable", cpAppVariable);
+        valuesMap.put("functionName", functionName);
         valuesMap.put("elementID", elementID);
         valuesMap.put("condition", condition);
 
@@ -129,7 +135,7 @@ public class CodeGenerator {
     public String getFiltersTemplate(PipedVariable pipedVariable) {
         String variableName = pipedVariable.getVariable().toString();
         String filter = "\n\t   () => {\n" +
-                        "\t\tlet value = " + cpAppVariable + "." + variableName + "\n";
+                        "\t\tlet value = " + variableName + "\n";
 
         List<Pipe> pipes = pipedVariable.getPipes();
         for(Pipe pipe : pipes) {
@@ -149,6 +155,14 @@ public class CodeGenerator {
         return filter;
     }
 
+    public String fixFunctionName(String functionName)
+    {
+        functionName = functionName.replace("-", "_");
+        functionName = functionName.replace(".", "_");
+        functionName = functionName.replace("@", "_");
+        return functionName;
+    }
+
     public void curlyRenderer(String elementID, List<PipedVariable> pipedVariables, String defaultText)
     {
         renders++;
@@ -161,8 +175,10 @@ public class CodeGenerator {
         targetCurlys += "\t";
         filters += "\t";
 
+        String functionName = fixFunctionName("curly_render_function_" + elementID);
         Map<String, String> valuesMap = new HashMap<>();
         valuesMap.put("elementID", elementID);
+        valuesMap.put("functionName", functionName);
         valuesMap.put("defaultText", defaultText);
         valuesMap.put("targetCurlys", targetCurlys);
         valuesMap.put("filters", filters);
@@ -172,45 +188,25 @@ public class CodeGenerator {
 
     public void cpIfGenerator(String elementID, String condition) {
         renders++;
+        String functionName = fixFunctionName("cp_if_function_" + elementID);
         Map<String, String> valuesMap = new HashMap<>();
+        valuesMap.put("functionName", functionName);
         valuesMap.put("condition", condition);
         valuesMap.put("elementID", elementID);
 
         GeneratedCode += replaceTemplate(Templates.CP_IF_TEMPLATE, valuesMap);
     }
 
-    public String stringifyFunctionParameters(List<Expression> arguments)
-    {
-        //handleChange(0, "string", varName , function(), !check)
-        
-        String parameters= "" ;
-            for(Expression argument: arguments){
-                
-                if(argument instanceof Identifier)
-                parameters+=cpAppVariable+"."+argument;
-
-                if(argument instanceof FunctionCall)
-                parameters+=cpAppVariable+"."+argument;
-
-                if(argument instanceof AccessedArrayElement)
-                parameters+=cpAppVariable+"."+argument;
-
-                if(argument instanceof UnaryBooleanExpression)
-                    parameters+=((UnaryBooleanExpression)argument).getOperator()
-                    +cpAppVariable+"."+((UnaryBooleanExpression)argument).getOperand();
-
-            }
-            return parameters;
-    }
 
     public void eventGenerator(String elementID, String eventName, FunctionCall eventFunction)
     {
         changes++;
+        String eventHandlerFunction = fixFunctionName("event_handler_" + elementID + "_" + eventName);
         Map<String, String> valuesMap = new HashMap<>();
+        valuesMap.put("eventHandlerFunction", eventHandlerFunction);
         valuesMap.put("elementID", elementID);
         valuesMap.put("eventName", eventName);
-        valuesMap.put("functionName", cpAppVariable+"."+eventFunction.getIdentifier().toString());
-        valuesMap.put("parameters", stringifyFunctionParameters(eventFunction.getArguments()));
+        valuesMap.put("function",eventFunction.toString());
         GeneratedCode += replaceTemplate(Templates.EVENT_TEMPLATE, valuesMap);
     }
 
@@ -219,6 +215,8 @@ public class CodeGenerator {
         renders++;
         Map<String, String> valuesMap = new HashMap<>();
         String elementID=forElement.getID();
+        String functionName = fixFunctionName("cpFor_" + elementID);
+        valuesMap.put("functionName", functionName);
         valuesMap.put("elementID", elementID);
 
         //<div cp-for="key,value in Array"></div>
@@ -230,16 +228,16 @@ public class CodeGenerator {
         valuesMap.put("ArrayName",((ForLoop)forLoop.getValue()).getObject().toString());
 
         //value=Array[z]
-        valuesMap.put("Value",((ForLoop)forLoop.getValue()).getValue().toString()+"="+valuesMap.get("ArrayName")+"[z]");
+        valuesMap.put("Value","let "+((ForLoop)forLoop.getValue()).getValue().toString()+"="+valuesMap.get("ArrayName")+"[z];");
 
         //i=z
         if(((ForLoop)forLoop.getValue()).getIndex()!=null)
-        valuesMap.put("Index",((ForLoop)forLoop.getValue()).getIndex().toString()+"=z");
+        valuesMap.put("Index","let "+((ForLoop)forLoop.getValue()).getIndex().toString()+"=z;");
         else valuesMap.put("index","");
 
         //key=z
         if(((ForLoop)forLoop.getValue()).getKey()!=null)
-        valuesMap.put("Key",((ForLoop)forLoop.getValue()).getKey().toString()+"=z");
+        valuesMap.put("Key","let "+((ForLoop)forLoop.getValue()).getKey().toString()+"=z;");
         else valuesMap.put("Key","");
 
 
@@ -247,6 +245,8 @@ public class CodeGenerator {
     }
     public void cpForGeneratorClose(String elementID) {
         Map<String, String> valuesMap = new HashMap<>();
+        String functionName = fixFunctionName("cpFor_" + elementID);
+        valuesMap.put("functionName", functionName);
         valuesMap.put("elementID", elementID);
         GeneratedCode += replaceTemplate(Templates.FOR_TEMPLATE_CLOSING, valuesMap);
 

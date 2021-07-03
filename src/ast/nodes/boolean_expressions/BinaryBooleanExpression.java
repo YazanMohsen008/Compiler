@@ -17,7 +17,8 @@ public class BinaryBooleanExpression implements BooleanExpression,Content {
 
     @Override
     public String toString() {
-        String textRepresentation = "Binary Boolean Expression: ";
+//        String textRepresentation = "Binary Boolean Expression: ";
+        String textRepresentation = "";
         textRepresentation += "(" + this.leftOperand + ")";
         textRepresentation += " " + this.operator + " ";
         textRepresentation += "(" + this.rightOperand + ")";

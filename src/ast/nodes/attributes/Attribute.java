@@ -15,10 +15,14 @@ public class Attribute {
     public static final String ID_ATTRIBUTE = "id";
     public static final String CLICK_ATTRIBUTE = "@click";
     public static final String MOUSE_OVER_ATTRIBUTE = "@mouseover";
+    public static final String MOUSE_MOVE_ATTRIBUTE = "@mousemove";
     public static final String FOCUS_ATTRIBUTE = "@focus";
     public static final String CHANGE_ATTRIBUTE = "@change";
     public static final String CP_SWITCH_ATTRIBUTE = "cp-switch";
     public static final String CP_FOR_ATTRIBUTE = "cp-for";
+    public static final String CP_IF_ATTRIBUTE = "cp-if";
+    public static final String CP_SHOW_ATTRIBUTE = "cp-show";
+    public static final String CP_HIDE_ATTRIBUTE = "cp-hide";
 
     public Attribute(String name, AttributeValue value) {
         this.name = name;
@@ -79,15 +83,26 @@ public class Attribute {
         return name.equals(CP_SWITCH_ATTRIBUTE);
     }
 
+    public boolean isCpShow() {
+        return name.equals(CP_SHOW_ATTRIBUTE);
+    }
+    public boolean isCpHide() {
+        return name.equals(CP_HIDE_ATTRIBUTE);
+    }
+
+    public boolean isIF() {
+        return name.equals(CP_IF_ATTRIBUTE);
+    }
+
     public boolean isEvent() {
         return (
                 this.name.equals(CLICK_ATTRIBUTE)
                         || this.name.equals(FOCUS_ATTRIBUTE)
                         || this.name.equals(MOUSE_OVER_ATTRIBUTE)
                         || this.name.equals(CHANGE_ATTRIBUTE)
+                        || this.name.equals(MOUSE_MOVE_ATTRIBUTE)
         );
     }
-
 
     public boolean isStructural() {
         return (this.AttributeIndexedName == HTMLLexer.CP_IF
@@ -102,5 +117,6 @@ public class Attribute {
     public AttributeValue getValue() {
         return value;
     }
+
 
 }

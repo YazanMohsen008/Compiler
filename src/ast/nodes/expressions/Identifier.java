@@ -9,6 +9,8 @@ public class Identifier implements BooleanExpression, ArithmeticExpression,
     private String name;
     private Symbol symbol;
     private ObjectMember parent;
+    private String CpAppVariable="";
+
     public Identifier(String name) {
         this.name = name;
     }
@@ -29,14 +31,6 @@ public class Identifier implements BooleanExpression, ArithmeticExpression,
         return name;
     }
 
-    @Override
-    public String toString() {
-        if (symbol != null)
-            return symbol.toString();
-        else
-            return name;
-
-    }
 
     @Override
     public void setParent(ObjectMember parent) {
@@ -46,6 +40,21 @@ public class Identifier implements BooleanExpression, ArithmeticExpression,
     @Override
     public ObjectMember getParent() {
         return parent;
+    }
+
+    @Override
+    public void setGlobal(String CpAppVariable) {
+        this.CpAppVariable=CpAppVariable+".";
+
+    }
+
+    @Override
+    public String toString() {
+        if (symbol != null)
+            return CpAppVariable+symbol.toString();
+        else
+            return CpAppVariable+name;
+
     }
 
 

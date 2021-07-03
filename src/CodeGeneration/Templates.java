@@ -5,15 +5,15 @@ public class Templates {
         // To make a template variable use this formula: {--variableToReplace--}
 
         public static String CP_MODEL_TEMPLATE = "    //cp model template \n"
-                        + "    if ({--cpAppVariable--}.{--variableName--}) {\n"
-                        + "      document.getElementById(\"{--elementID--}\").value =\n"
-                        + "        {--cpAppVariable--}.{--variableName--};\n" + "    }\n"
+                        + "    if ({--variableName--}) {\n"
+                        + "    document.getElementById(\"{--elementID--}\").value =\n"
+                        + "    {--variableName--};\n" + "    }\n"
                         + "    document.getElementById(\"{--elementID--}\").addEventListener(\"input\", (event) => {\n"
-                        + "      {--cpAppVariable--}.{--variableName--} = event.target.value;\n" + "    });\n\n";
+                        + "    {--variableName--} = event.target.value;\n" + "    });\n\n";
 
         public static String CURLY_TEMPLATE =
                 "   //Curly Braces Renderer\n " +
-                "   const curly_render_function_{--elementID--} = function() {\n" +
+                "   const {--functionName--} = function() {\n" +
                 "       let defaultText = `{--defaultText--}`;\n" +
                 "       const targetCurlys = [{--targetCurlys--}];\n" +
                 "\n" +
@@ -24,63 +24,63 @@ public class Templates {
                 "          document.getElementById(\"{--elementID--}\").innerHTML = defaultText;\n" +
                 "       });\n" +
                 "  }\n" +
-                "  renders.push(curly_render_function_{--elementID--});\n\n";
+                "  renders.push({--functionName--});\n\n";
 
 
         public static String CP_SHOW_TEMPLATE =
             " //cp-show template \n" +
-            "   const cp_show_function_{--elementID--} = function() {\n" +
+            "   const {--functionName--} = function() {\n" +
             "    const showElement = document.getElementById(\"{--elemnetID--}\");\n" +
             "    if ({--condition--})\n" +
-            "      showElement.hidden = true;\n" +
+            "      showElement.hidden = false;\n" +
             "    else\n" +
-            "      showElement.hidden = false;" +
+            "      showElement.hidden = true;" +
             "  }\n" +
-            "  renders.push(cp_show_function_{--elementID--});\n\n";
+            "  renders.push({--functionName--});\n\n";
 
 
         public static String CP_HIDE_TEMPLATE =
             " //cp-hide template \n" +
-            "  const cp_hide_function_{--elementID--} = function() {\n" +
+            "  const {--functionName--} = function() {\n" +
             "    const hideElement = document.getElementById(\"{--elementID--}\");\n" +
             "    if ({--condition--})\n" +
             "      hideElement.hidden = true;\n" +
             "    else\n" +
             "      hideElement.hidden = false"+
             "  }\n" +
-            "  renders.push(cp_hide_function_{--elementID--});\n\n";
+            "  renders.push({--functionName--});\n\n";
 
 
 
         public static String CP_IF_TEMPLATE = 
             "	// cp-if generated code \n" +
-            "   const cp_if_function_{--elementID--} = function() {\n" +
+            "   const {--functionName--} = function() {\n" +
             "    const ifElement = document.getElementById(\"{--elementID--}\");\n" +
-            "    if (!{--condition--}) {\n" +
-            "      ifElement.hidden = true;\n" +
-            "    }\n" +
-            "    else{\n" +
+            "    if ({--condition--}) {\n" +
             "      ifElement.hidden = false;\n" +
             "    }\n" +
+            "    else{\n" +
+            "      ifElement.hidden = true;\n" +
+            "    }\n" +
             "  }\n" +
-            "  renders.push(cp_if_function_{--elementID--});\n\n";
+            "  renders.push({--functionName--});\n\n";
 
 
         public static String EVENT_TEMPLATE = 
         "	 // cp-event \n" +
-        "      const event_handler_{--elementID--}_{--eventName--} = function() {\n" +
+        "      const {--eventHandlerFunction--} = function() {\n" +
         "        document.getElementById(\"{--elementID--}\").addEventListener(\"{--eventName--}\", (event) => {\n" +
-        "            {--functionName--}({--parameters--});\n"+
+        "            {--function--};\n"+
         "        });\n" +
         "    }\n" +
-        "    changes.push(event_handler_{--elementID--}_{--eventName--});\n\n";
+        "    changes.push({--eventHandlerFunction--});\n\n";
 
 
 
         public static String CP_SWITCH_TEMPLATE = "  //cp switch\n"
-                        + "  const switchFunc_{--elementID--} = function () {\n"
+                        + "  const {--functionName--} = function () {\n"
                         + "    const switchElement = document.getElementById(\"{--elementID--}\");\n"
-                        + "    const value = {--cpAppVariable--}.{--variableName--};\n" + "\n"
+                        + "    const value = {--variableName--};\n" + "\n"
                         + "    let matchFound = false;\n"
                         + "    for (let i = 0; i < switchElement.children.length - 1; i++) {\n"
                         + "      const child = switchElement.children[i];\n"
@@ -94,7 +94,7 @@ public class Templates {
                         + "    if (!matchFound && lastChildren.getAttribute(\"cp-switchDefault\") !== null) {\n"
                         + "      lastChildren.hidden = false;\n" + "    } else {\n"
                         + "      lastChildren.hidden = true;\n" + "    }\n" + "  };\n"
-                        + "  renders.push(switchFunc_{--elementID--});\n\n";
+                        + "  renders.push({--functionName--});\n\n";
 
         public static String RENDER_FUNCTION = "  function render() {\n" + "    setInterval(() => {\n"
                         +"    for(let i = 0; i < new_elements.length; i++) {\n" +
@@ -106,13 +106,13 @@ public class Templates {
 
 
          public static String FOR_TEMPLATE_OPENING =
-                 " var cpFor_{--elementID--} = function (event) {\n" +
+                 " var {--functionName--} = function (event) {\n" +
                  "        let originalElement = document.getElementById(\"{--elementID--}\");\n" +
                  "        let container = originalElement.parentElement;\n" +
                  "\n" +
                  "        for (var z in {--ArrayName--}) {\n" +
                  "          let elem = originalElement.cloneNode(true);\n" +
-                 "          {--index--}\n" +
+                 "           {--index--}\n" +
                  "          {--Value--}\n" +
                  "          {--Key--}\n" +
                  "          elem.id = \"{--elementID--}\" + z;\n" +
@@ -127,7 +127,7 @@ public class Templates {
                  "        }\n" +
                  "        originalElement.hidden = true;\n" +
                  "      };\n" +
-                 "      renders.push(cpFor_{--elementID--});\n" +
+                 "      renders.push({--functionName--});\n" +
                  "\n" +
                  "\n";
 
@@ -136,12 +136,14 @@ public class Templates {
         // to lower
         public static String LOWER_FUNCTION = 
                         "function lower(str) {\n" +
+                        "   if(!str) return \"\";" +
                         "  return str.toLowerCase();\n" +
                         "}\n";
 
         // to upper 
         public static String UPPER_FUNCTION = 
                         "  function upper(str) {\n" +
+                        "   if(!str) return \"\";" +
                         "   return str.toUpperCase();\n" +
                         "  }\n";
                         
@@ -161,6 +163,8 @@ public class Templates {
         // date
         public static String DATE_FUNCTION = 
                     "function date(dt, format) {\n" +
+                    "  if(!dt) return \"-/-/-\";\n" +
+                    "  dt = new Date(dt);\n" +
                     "  const year = new Intl.DateTimeFormat(\"en\", { year: \"numeric\" }).format(dt);\n" +
                     "  const month = new Intl.DateTimeFormat(\"en\", { month: \"2-digit\" }).format(\n" +
                     "    dt\n" +

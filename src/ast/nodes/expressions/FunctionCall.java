@@ -12,6 +12,8 @@ public class FunctionCall implements BooleanExpression, ArithmeticExpression,
     private List<Expression> arguments;
     private Symbol symbol;
     private ObjectMember parent;
+    private String CpAppVariable="";
+
 
     public FunctionCall(Identifier identifier, List<Expression> arguments) {
         this.identifier = identifier;
@@ -30,18 +32,7 @@ public class FunctionCall implements BooleanExpression, ArithmeticExpression,
         return arguments;
     }
 
-    @Override
-    public String toString() {
-        String textRepresentation = "";
-        textRepresentation += this.identifier + "(";
-        if(this.arguments != null && arguments.size()>0) {
-            for (int i = 0; i < this.arguments.size() - 1; i++)
-                textRepresentation += this.arguments.get(i) + ", ";
-            textRepresentation += this.arguments.get(this.arguments.size() - 1);
-        }
-        textRepresentation += ")";
-        return textRepresentation;
-    }
+
 
     @Override
     public void setParent(ObjectMember parent) {
@@ -68,4 +59,22 @@ public class FunctionCall implements BooleanExpression, ArithmeticExpression,
         this.symbol=symbol;
     }
 
+    @Override
+    public void setGlobal(String CpAppVariable) {
+        this.CpAppVariable=CpAppVariable+".";
+
     }
+    @Override
+    public String toString() {
+        String textRepresentation = "";
+        textRepresentation += CpAppVariable+this.identifier + "(";
+        if(this.arguments != null && arguments.size()>0) {
+            for (int i = 0; i < this.arguments.size() - 1; i++)
+                textRepresentation += this.arguments.get(i) + ", ";
+            textRepresentation += this.arguments.get(this.arguments.size() - 1);
+        }
+        textRepresentation += ")";
+        return textRepresentation;
+    }
+
+}

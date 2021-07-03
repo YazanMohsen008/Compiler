@@ -221,6 +221,18 @@ public interface HTMLParserListener extends ParseTreeListener {
 	 */
 	void exitMouseoverAttribute(HTMLParser.MouseoverAttributeContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code mousemoveAttribute}
+	 * labeled alternative in {@link HTMLParser#attribute}.
+	 * @param ctx the parse tree
+	 */
+	void enterMousemoveAttribute(HTMLParser.MousemoveAttributeContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code mousemoveAttribute}
+	 * labeled alternative in {@link HTMLParser#attribute}.
+	 * @param ctx the parse tree
+	 */
+	void exitMousemoveAttribute(HTMLParser.MousemoveAttributeContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code non_cpAttribute}
 	 * labeled alternative in {@link HTMLParser#attribute}.
 	 * @param ctx the parse tree

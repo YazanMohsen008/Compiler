@@ -10,5 +10,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="antlr-4.8-complete1" level="project" />
     <orderEntry type="library" name="antlr-4.8-complete" level="project" />
+    <orderEntry type="library" name="jsoup-1.13.1" level="project" />
   </component>
 </module>

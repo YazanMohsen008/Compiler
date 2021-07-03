@@ -135,6 +135,13 @@ public interface HTMLParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMouseoverAttribute(HTMLParser.MouseoverAttributeContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code mousemoveAttribute}
+	 * labeled alternative in {@link HTMLParser#attribute}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMousemoveAttribute(HTMLParser.MousemoveAttributeContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code non_cpAttribute}
 	 * labeled alternative in {@link HTMLParser#attribute}.
 	 * @param ctx the parse tree

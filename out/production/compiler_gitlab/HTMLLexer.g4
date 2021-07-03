@@ -70,6 +70,8 @@ CLICK : '@click' -> pushMode(CP_MIDDLE) ;
 
 MOUSEOVER : '@mouseover' -> pushMode(CP_MIDDLE) ;
 
+MOUSEMOVE : '@mousemove' -> pushMode(CP_MIDDLE) ;
+
 TAG_NAME : TAG_FIRST_CHAR TAG_CHAR* ;
 
 TAG_EQUALS : '=' -> pushMode(ATTVALUE) ;

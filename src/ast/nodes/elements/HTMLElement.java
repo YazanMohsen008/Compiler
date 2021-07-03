@@ -80,7 +80,7 @@ public class HTMLElement implements Element {
             if(attribute.isID())
                 return attribute.getValue().toString().substring(1,attribute.getValue().toString().length()-1);
         }//TODO Generate unique ID
-        return "Generated ID";
+        return "Generated_ID";
     }
  public boolean haveFor() {
         for (Attribute attribute:attributes) {
